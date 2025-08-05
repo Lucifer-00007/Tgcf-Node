@@ -66,11 +66,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           collapsed ? 'w-20' : 'w-64'
         }`}
       >
-        <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-700">
-          <Link to="/hello" className={`flex items-center gap-2 overflow-hidden transition-all ${collapsed ? 'w-0' : 'w-auto'}`}>
-            <span className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-lg font-bold text-white">T</span>
-            <span className="truncate font-semibold">TGCF Web UI</span>
-          </Link>
+        <div className={`flex h-16 items-center border-b border-slate-200 px-4 dark:border-slate-700 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+          {!collapsed && (
+            <Link to="/hello" className="flex items-center gap-2">
+              <span className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-lg font-bold text-white">T</span>
+              <span className="truncate font-semibold">TGCF Web UI</span>
+            </Link>
+          )}
           <button
             className="rounded-full p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
             onClick={onToggleCollapsed}
