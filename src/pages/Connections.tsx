@@ -167,7 +167,7 @@ const Connections: React.FC = () => {
                         type="button"
                         onClick={() => removeConnection(activeTab)}
                         disabled={!activeConnection}
-                        className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:text-gray-400 dark:text-red-500 dark:hover:bg-red-900/50"
+                        className="flex items-center gap-2 rounded-md border border-red-500 px-4 py-2 text-sm font-medium text-red-600 shadow-sm transition-colors hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-500 dark:text-red-400 dark:hover:bg-red-500 dark:hover:text-white dark:focus:ring-offset-gray-800"
                     >
                         <Trash2 className="h-4 w-4" />
                         <span>Delete</span>
