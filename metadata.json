@@ -1,0 +1,6 @@
+{
+  "name": "TGCF Web - Node.js",
+  "description": "A web interface for managing tgcf, the ultimate tool to automate custom telegram message forwarding.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
