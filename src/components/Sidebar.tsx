@@ -74,17 +74,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {renderLinks(!collapsed)}
 
-        <div className="space-y-2 border-t border-slate-200 p-3 dark:border-slate-700">
-          <ThemeToggle theme={theme} setTheme={setTheme} />
-          <a
-            href="#"
-            onClick={(e) => { e.preventDefault(); onLogout(); }}
-            className="group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700"
-            title="Logout"
-          >
-            <LogOut className="h-5 w-5 flex-shrink-0" />
-            {!collapsed && <span className="ml-3">Logout</span>}
-          </a>
+        <div className="border-t border-slate-200 p-3 dark:border-slate-700">
+          {!collapsed ? (
+            <div className="flex items-center justify-between">
+              <a
+                href="#"
+                onClick={(e) => { e.preventDefault(); onLogout(); }}
+                className="group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700"
+                title="Logout"
+              >
+                <LogOut className="h-5 w-5 flex-shrink-0" />
+                <span className="ml-3">Logout</span>
+              </a>
+              <ThemeToggle theme={theme} setTheme={setTheme} />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <ThemeToggle theme={theme} setTheme={setTheme} />
+              <a
+                href="#"
+                onClick={(e) => { e.preventDefault(); onLogout(); }}
+                className="group flex justify-center rounded-lg py-2.5 text-sm font-medium text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700"
+                title="Logout"
+              >
+                <LogOut className="h-5 w-5 flex-shrink-0" />
+              </a>
+            </div>
+          )}
         </div>
       </aside>
 
@@ -98,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       
       {/* Mobile Sidebar */}
       <aside
-        className={`fixed left-0 top-0 z-40 h-full w-64 transform border-r border-slate-200 bg-slate-100 text-gray-800 shadow-xl transition-transform duration-300 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200 md:hidden ${
+        className={`fixed left-0 top-0 z-40 flex h-full w-64 transform flex-col border-r border-slate-200 bg-slate-100 text-gray-800 shadow-xl transition-transform duration-300 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200 md:hidden ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-hidden={!mobileOpen}
@@ -118,16 +134,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {renderLinks(true)}
 
-        <div className="border-t border-slate-200 p-4 dark:border-slate-700">
-          <ThemeToggle theme={theme} setTheme={setTheme} />
+        <div className="flex items-center justify-between border-t border-slate-200 p-4 dark:border-slate-700">
           <a
             href="#"
             onClick={(e) => { e.preventDefault(); onLogout(); }}
-            className="group mt-4 flex w-full items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700"
+            className="group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700"
           >
             <LogOut className="mr-3 h-5 w-5" />
             <span>Logout</span>
           </a>
+          <ThemeToggle theme={theme} setTheme={setTheme} />
         </div>
       </aside>
     </>
