@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { CollapsibleSection } from '../components/CollapsibleSection';
-import { Link as LinkIcon, PlayCircle, Plug } from 'lucide-react';
+import { Link as LinkIcon, PlayCircle, Plug, KeyRound } from 'lucide-react';
 
 const TelegramIcon = () => (
     <div className="relative h-24 w-24 flex-shrink-0">
@@ -46,15 +46,18 @@ const Hello: React.FC = () => {
       {/* Quick Actions */}
       <div className="mt-8">
         <h2 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-300">Quick Actions</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <ActionCard to="/telegram-login" icon={KeyRound} title="Manage Login">
+                Update your API keys and bot tokens securely.
+            </ActionCard>
             <ActionCard to="/connections" icon={LinkIcon} title="Configure Connections">
                 Set up your message sources and destinations.
             </ActionCard>
-            <ActionCard to="/run" icon={PlayCircle} title="Run & Monitor">
-                Start the forwarding process and view logs.
-            </ActionCard>
             <ActionCard to="/plugins" icon={Plug} title="Explore Plugins">
                 Customize messages with filters, formatting, and more.
+            </ActionCard>
+            <ActionCard to="/run" icon={PlayCircle} title="Run & Monitor">
+                Start the forwarding process and view logs.
             </ActionCard>
         </div>
       </div>
