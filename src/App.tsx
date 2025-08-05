@@ -11,6 +11,7 @@ import Advanced from './pages/Advanced';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ThemeToggle from './components/ThemeToggle';
 
 export type Theme = 'light' | 'dark';
 
@@ -93,14 +94,15 @@ const App: React.FC = () => {
       default:
         return (
           <>
-            {/* Public header with only Login */}
+            {/* Public header with Login and Theme Toggle */}
             <header className="sticky top-0 z-20 mb-6 border-b border-slate-200 bg-white/80 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/70">
               <div className="mx-auto flex max-w-6xl items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold">T</span>
                   <span className="text-sm font-semibold">TGCF Web UI</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-4">
+                  <ThemeToggle theme={theme} setTheme={setTheme} />
                   <button
                     onClick={() => setPublicRoute('login')}
                     className="rounded-md px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
@@ -111,11 +113,7 @@ const App: React.FC = () => {
               </div>
             </header>
 
-            {/* Landing content (no CTA buttons inside) */}
-            <Landing
-              onLogin={() => setPublicRoute('login')}
-              onRegister={() => setPublicRoute('register')}
-            />
+            <Landing />
 
             {/* Footer actions */}
             <div className="mx-auto my-10 flex max-w-6xl justify-center gap-3">
