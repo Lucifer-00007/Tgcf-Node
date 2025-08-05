@@ -27,7 +27,7 @@ const LinkIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 const PuzzleIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 6.087c0-.629.507-1.137 1.137-1.137h1.5a.75.75 0 01.75.75v1.5c0 .63-.507 1.137-1.137 1.137h-4.226c-.431 0-.855.14-1.206.39l-1.857 1.318a.75.75 0 000 1.298l1.857 1.318c.351.25.775.39 1.206.39h4.226c.63 0 1.137.507 1.137 1.137v1.5a.75.75 0 01-.75.75h-1.5a1.137 1.137 0 01-1.137-1.137v-1.125a.75.75 0 00-.75-.75h-1.5a.75.75 0 00-.75.75v1.125c0 .63.507 1.137 1.137 1.137h1.5a.75.75 0 01.75.75v1.5c0 .63-.507 1.137-1.137 1.137h-4.226c-1.31 0-2.427-.832-2.849-2.071l-.288-.865a1.125 1.125 0 01.21-1.282l1.857-1.318a.75.75 0 000-1.298L5.91 9.702a1.125 1.125 0 01-.21-1.282l.288-.865C6.423 5.332 7.54 4.5 8.85 4.5h4.226c.63 0 1.137.507 1.137 1.137v1.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V6.087z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 6.087c0-.629.507-1.137 1.137-1.137h1.5a.75.75 0 01.75.75v1.5c0 .63-.507 1.137-1.137 1.137h-4.226c-.431 0-.855.14-1.206.39l-1.857 1.318a.75.75 0 000 1.298l1.857 1.318c.351.25.775.39 1.206.39h4.226c.63 0 1.137.507 1.137 1.137v1.5a.75.75 0 01-.75.75h-1.5a1.137 1.137 0 01-1.137-1.137v-1.125a.75.75 0 00-.75-.75h-1.5a.75.75 0 00-.75.75v1.125c0 .630.507 1.137 1.137 1.137h1.5a.75.75 0 01.75.75v1.5c0 .630-.507 1.137-1.137 1.137h-4.226c-1.31 0-2.427-.832-2.849-2.071l-.288-.865a1.125 1.125 0 01.21-1.282l1.857-1.318a.75.75 0 000-1.298L5.91 9.702a1.125 1.125 0 01-.21-1.282l.288-.865C6.423 5.332 7.54 4.5 8.85 4.5h4.226c.63 0 1.137.507 1.137 1.137v1.5a.75.75 0 01-.75.75h-1.5a.75.75 0 00-.75-.75V6.087z" />
   </svg>
 );
 
@@ -45,7 +45,6 @@ const AdjustmentsIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-
 export const NAV_ITEMS = [
   { name: Page.Hello, icon: HandWaveIcon },
   { name: Page.TelegramLogin, icon: KeyIcon },
@@ -54,4 +53,5 @@ export const NAV_ITEMS = [
   { name: Page.Plugins, icon: PuzzleIcon },
   { name: Page.Run, icon: CogIcon },
   { name: Page.Advanced, icon: AdjustmentsIcon },
+  { name: Page.Auth, icon: KeyIcon },
 ];
