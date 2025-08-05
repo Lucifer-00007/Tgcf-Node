@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
-import { PlayCircle } from 'lucide-react';
+import { PlayCircle, Terminal } from 'lucide-react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
 
 const logData = `
@@ -32,9 +32,14 @@ const Run: React.FC = () => {
     const [showForwardedFrom, setShowForwardedFrom] = useState(false);
     const [syncOnDelete, setSyncOnDelete] = useState(false);
     const [logLines, setLogLines] = useState(100);
+    const [isRunning, setIsRunning] = useState(false);
 
     const logs = logData.trim().split('\n');
     const displayedLogs = logs.slice(-logLines).join('\n');
+
+    const handleToggleRun = () => {
+        setIsRunning(prev => !prev);
+    };
 
     return (
         <div className="mx-auto max-w-4xl">
@@ -112,8 +117,11 @@ const Run: React.FC = () => {
             </div>
 
             <div className="mb-6 flex items-center space-x-4">
-                <button className="rounded-md bg-red-600 px-6 py-2 font-semibold text-white shadow-sm hover:bg-red-700">
-                    Stop
+                <button
+                    onClick={handleToggleRun}
+                    className="rounded-md bg-red-600 px-6 py-2 font-semibold text-white shadow-sm hover:bg-red-700"
+                >
+                    {isRunning ? 'Stop' : 'Run'}
                 </button>
             </div>
 
@@ -137,22 +145,34 @@ const Run: React.FC = () => {
                 </div>
             </div>
             
-            <div className="rounded-lg bg-gray-800 text-white shadow-inner">
-                <div className="flex items-center justify-between border-b border-gray-700 p-4">
-                    <p className="font-mono text-sm">Logs</p>
-                    <div className="flex items-center space-x-2">
-                         <span className="h-3 w-3 rounded-full bg-red-500"></span>
-                         <span className="h-3 w-3 rounded-full bg-yellow-400"></span>
-                         <span className="h-3 w-3 rounded-full bg-green-500"></span>
+            {isRunning ? (
+                <div className="rounded-lg bg-gray-800 text-white shadow-inner">
+                    <div className="flex items-center justify-between border-b border-gray-700 p-4">
+                        <p className="font-mono text-sm">Logs</p>
+                        <div className="flex items-center space-x-2">
+                             <span className="h-3 w-3 rounded-full bg-red-500"></span>
+                             <span className="h-3 w-3 rounded-full bg-yellow-400"></span>
+                             <span className="h-3 w-3 rounded-full bg-green-500"></span>
+                        </div>
+                    </div>
+                    <div className="h-96 overflow-y-auto whitespace-pre-wrap p-4 font-mono text-sm leading-relaxed">
+                        {displayedLogs}
+                    </div>
+                    <div className="border-t border-gray-700 p-2 text-center text-xs text-gray-400">
+                        (streaming)
                     </div>
                 </div>
-                <div className="h-96 overflow-y-auto whitespace-pre-wrap p-4 font-mono text-sm leading-relaxed">
-                    {displayedLogs}
+            ) : (
+                <div>
+                    <p className="text-gray-500 dark:text-gray-400">No present logs found</p>
+                    <button
+                        type="button"
+                        className="mt-4 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
+                    >
+                        Load more logs
+                    </button>
                 </div>
-                <div className="border-t border-gray-700 p-2 text-center text-xs text-gray-400">
-                    (streaming)
-                </div>
-            </div>
+            )}
         </div>
     );
 };
