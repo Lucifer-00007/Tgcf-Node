@@ -2,100 +2,185 @@ import React, { useState } from 'react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
+import { Connection } from '../types';
+import { PlusCircle, Trash2, Save } from 'lucide-react';
+
+const initialConnections: Connection[] = [
+    { id: 1, name: 'Main Forward', enabled: true, source: '-1001392052324', destinations: '-1001134939864\n-1001134939865', offset: '0', end: '0' },
+    { id: 2, name: 'Backup Channel', enabled: false, source: '-1001392052324', destinations: '-1001134939866', offset: '0', end: '0' },
+];
 
 const Connections: React.FC = () => {
-    const [connections, setConnections] = useState([
-        { id: 1, name: 'Connection 1' },
-        { id: 2, name: 'Connection 2' },
-        { id: 3, name: 'Connection 3' },
-        { id: 4, name: 'Connection 4' },
-        { id: 5, name: 'Connection 5' },
-    ]);
+    const [connections, setConnections] = useState<Connection[]>(initialConnections);
     const [activeTab, setActiveTab] = useState(0);
-    const [useThisConnection, setUseThisConnection] = useState(true);
+
+    const activeConnection = connections[activeTab];
+
+    const handleUpdate = (field: keyof Connection, value: any) => {
+        const newConnections = [...connections];
+        newConnections[activeTab] = { ...newConnections[activeTab], [field]: value };
+        setConnections(newConnections);
+    };
 
     const addNewConnection = () => {
         const newId = connections.length > 0 ? Math.max(...connections.map(c => c.id)) + 1 : 1;
-        setConnections([...connections, { id: newId, name: `Connection ${newId}` }]);
+        const newConnection: Connection = {
+            id: newId,
+            name: `Connection ${newId}`,
+            enabled: true,
+            source: '',
+            destinations: '',
+            offset: '0',
+            end: '0',
+        };
+        setConnections([...connections, newConnection]);
         setActiveTab(connections.length);
     };
 
+    const removeConnection = (index: number) => {
+        if (window.confirm(`Are you sure you want to delete "${connections[index].name}"?`)) {
+            const newConnections = connections.filter((_, i) => i !== index);
+            setConnections(newConnections);
+            setActiveTab(Math.max(0, index - 1));
+        }
+    };
+
     return (
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-4xl pb-24">
             <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Connections</h1>
-            <div className="mb-4 flex items-center border-b border-gray-200 dark:border-gray-700">
+            
+            <div className="mb-6 flex items-center border-b border-gray-200 dark:border-gray-700">
                 <div className="flex flex-grow items-center space-x-1 overflow-x-auto">
                     {connections.map((conn, index) => (
                         <button
                             key={conn.id}
                             onClick={() => setActiveTab(index)}
-                            className={`flex-shrink-0 rounded-t-md px-4 py-2 text-sm font-medium ${
+                            className={`group relative flex-shrink-0 rounded-t-md px-4 py-2.5 text-sm font-medium transition-colors ${
                                 activeTab === index
-                                    ? 'border-b-2 border-green-500 bg-white text-green-600 dark:bg-gray-800 dark:text-green-400'
-                                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                                    ? 'border-b-2 border-blue-500 bg-white text-blue-600 dark:bg-gray-800 dark:text-blue-400'
+                                    : 'text-gray-500 hover:bg-slate-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700/50 dark:hover:text-gray-200'
                             }`}
                         >
-                            <span className={`mr-2 inline-block h-2 w-2 rounded-full ${activeTab === index ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                            <span className={`mr-2 inline-block h-2 w-2 rounded-full transition-colors ${conn.enabled ? 'bg-green-500' : 'bg-gray-400'}`}></span>
                             {conn.name}
                         </button>
                     ))}
                 </div>
                 <button
                     onClick={addNewConnection}
-                    className="ml-4 flex-shrink-0 text-sm font-medium text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
+                    className="ml-4 flex flex-shrink-0 items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                 >
-                    + Add new
+                    <PlusCircle className="h-4 w-4" />
+                    <span>Add New</span>
                 </button>
             </div>
 
-            <div className="space-y-4">
-                <CollapsibleSection title="Modify Metadata">
-                    <label htmlFor="conn-name" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Name of this connection</label>
-                    <input id="conn-name" type="text" defaultValue={`Connection ${activeTab + 1}`} className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200" />
-                    <div className="my-4">
-                        <Alert>
-                            You can untick the below checkbox to suspend this connection.
-                        </Alert>
-                    </div>
-                    <Checkbox id="use-conn" label="Use this connection" checked={useThisConnection} onChange={setUseThisConnection} />
-                </CollapsibleSection>
+            {activeConnection ? (
+                <div className="space-y-4">
+                    <CollapsibleSection title="General Settings">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div>
+                                <label htmlFor="conn-name" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Connection Name</label>
+                                <input 
+                                    id="conn-name" 
+                                    type="text" 
+                                    value={activeConnection.name}
+                                    onChange={(e) => handleUpdate('name', e.target.value)}
+                                    className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200" 
+                                />
+                            </div>
+                            <div className="flex items-end pb-1">
+                                <Checkbox 
+                                    id="use-conn" 
+                                    label="Enable this connection" 
+                                    checked={activeConnection.enabled} 
+                                    onChange={(checked) => handleUpdate('enabled', checked)} 
+                                    description="Untick to suspend this connection."
+                                />
+                            </div>
+                        </div>
+                    </CollapsibleSection>
 
-                <CollapsibleSection title="Source and Destination">
-                    <p className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Configure connection {activeTab + 1}</p>
-                    <label htmlFor="source" className="mb-1 mt-4 block text-xs font-medium text-gray-500 dark:text-gray-400">Source</label>
-                    <input id="source" type="text" defaultValue="-1001392052324" className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200" />
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">only one source is allowed in a connection</p>
+                    <CollapsibleSection title="Source and Destinations">
+                        <div>
+                            <label htmlFor="source" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-400">Source</label>
+                            <input 
+                                id="source" 
+                                type="text" 
+                                value={activeConnection.source}
+                                onChange={(e) => handleUpdate('source', e.target.value)}
+                                placeholder="Enter a single source ID (e.g., -100... or @channel)"
+                                className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200" 
+                            />
+                        </div>
+                        <div className="mt-4">
+                            <label htmlFor="destinations" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-400">Destinations</label>
+                            <textarea 
+                                id="destinations" 
+                                rows={4} 
+                                value={activeConnection.destinations}
+                                onChange={(e) => handleUpdate('destinations', e.target.value)}
+                                placeholder="Enter destination IDs, one per line."
+                                className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                            ></textarea>
+                        </div>
+                    </CollapsibleSection>
 
-                    <label htmlFor="destinations" className="mb-1 mt-4 block text-xs font-medium text-gray-500 dark:text-gray-400">Destinations</label>
-                    <textarea id="destinations" rows={4} defaultValue="-1001134939864" className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"></textarea>
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Write destinations one item per line</p>
-                </CollapsibleSection>
+                    <CollapsibleSection title="Past Mode Settings">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div>
+                                <label htmlFor="offset" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Offset</label>
+                                <input 
+                                    id="offset" 
+                                    type="number" 
+                                    value={activeConnection.offset}
+                                    onChange={(e) => handleUpdate('offset', e.target.value)}
+                                    className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200" 
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="end" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">End</label>
+                                <input 
+                                    id="end" 
+                                    type="number" 
+                                    value={activeConnection.end}
+                                    onChange={(e) => handleUpdate('end', e.target.value)}
+                                    className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200" 
+                                />
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+                </div>
+            ) : (
+                <div className="py-16 text-center">
+                    <p className="text-gray-500 dark:text-gray-400">No connections configured.</p>
+                    <button onClick={addNewConnection} className="mt-4 text-blue-600 dark:text-blue-400 hover:underline">
+                        Add your first connection
+                    </button>
+                </div>
+            )}
 
-                <CollapsibleSection title="Past Mode Settings">
-                    <label htmlFor="offset" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Offset</label>
-                    <input id="offset" type="text" defaultValue="0" className="mb-4 w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200" />
-                    <label htmlFor="end" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">End</label>
-                    <input id="end" type="text" defaultValue="0" className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200" />
-                </CollapsibleSection>
-
-                <CollapsibleSection title="Delete this connection">
-                    <Alert type="warning">
-                        Clicking the 'Remove' button will <strong>delete connection {activeTab + 1}</strong>. This action cannot be reversed once done.
-                    </Alert>
+            {/* Floating Action Bar */}
+            <div className="fixed bottom-0 left-0 right-0 z-10 border-t border-slate-200 bg-white/80 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/80">
+                <div className="mx-auto flex max-w-4xl items-center justify-end gap-4 px-4 py-3">
                     <button
                         type="button"
-                        className="mt-4 w-auto rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                        onClick={() => removeConnection(activeTab)}
+                        disabled={!activeConnection}
+                        className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:text-gray-400 dark:text-red-500 dark:hover:bg-red-900/50"
                     >
-                        Remove connection {activeTab + 1}
+                        <Trash2 className="h-4 w-4" />
+                        <span>Delete</span>
                     </button>
-                </CollapsibleSection>
-
-                <button
-                    type="button"
-                    className="w-auto rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
-                >
-                    Save
-                </button>
+                    <button
+                        type="button"
+                        disabled={!activeConnection}
+                        className="flex items-center gap-2 rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-gray-800"
+                    >
+                        <Save className="h-4 w-4" />
+                        <span>Save Changes</span>
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -7,3 +7,13 @@ export enum Page {
   Run = 'Run',
   Advanced = 'Advanced',
 }
+
+export interface Connection {
+  id: number;
+  name: string;
+  enabled: boolean;
+  source: string;
+  destinations: string;
+  offset: string;
+  end: string;
+}
