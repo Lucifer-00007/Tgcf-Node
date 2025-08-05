@@ -47,7 +47,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ id, label, value, onChang
     );
 };
 
-const TelegramLogin: React.FC = () => {
+const Credentials: React.FC = () => {
     const [apiId, setApiId] = useState('**********');
     const [apiHash, setApiHash] = useState('**********************');
     const [botToken, setBotToken] = useState('**********************');
@@ -55,7 +55,7 @@ const TelegramLogin: React.FC = () => {
 
     return (
         <div className="mx-auto max-w-2xl">
-            <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Telegram Login</h1>
+            <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Telegram Credentials</h1>
             <div className="rounded-lg border border-slate-200 bg-white p-8 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <PasswordInput
                     id="api-id"
@@ -128,4 +128,4 @@ const TelegramLogin: React.FC = () => {
     );
 };
 
-export default TelegramLogin;
+export default Credentials;

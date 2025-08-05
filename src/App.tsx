@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate, Link, Navigate } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Page } from './types';
 import Hello from './pages/Hello';
-import TelegramLogin from './pages/TelegramLogin';
+import Credentials from './pages/Credentials';
 import Admins from './pages/Admins';
 import Connections from './pages/Connections';
 import Plugins from './pages/Plugins';
@@ -100,7 +100,7 @@ const App: React.FC = () => {
             </button>
             <Routes>
               <Route path="/hello" element={<Hello />} />
-              <Route path="/telegram-login" element={<TelegramLogin />} />
+              <Route path="/credentials" element={<Credentials />} />
               <Route path="/admins" element={<Admins />} />
               <Route path="/connections" element={<Connections />} />
               <Route path="/plugins" element={<Plugins />} />

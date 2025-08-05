@@ -47,7 +47,7 @@ const Hello: React.FC = () => {
       <div className="mt-8">
         <h2 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-300">Quick Actions</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <ActionCard to="/telegram-login" icon={KeyRound} title="Manage Login">
+            <ActionCard to="/credentials" icon={KeyRound} title="Manage Credentials">
                 Update your API keys and bot tokens securely.
             </ActionCard>
             <ActionCard to="/connections" icon={LinkIcon} title="Configure Connections">

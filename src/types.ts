@@ -1,6 +1,6 @@
 export enum Page {
   Hello = 'Hello',
-  TelegramLogin = 'Telegram Login',
+  Credentials = 'Credentials',
   Admins = 'Admins',
   Connections = 'Connections',
   Plugins = 'Plugins',
