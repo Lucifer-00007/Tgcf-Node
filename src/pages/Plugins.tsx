@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
+import { Alert } from '../components/Alert';
+import { Plug } from 'lucide-react';
 
 const Plugins: React.FC = () => {
     const [filterEnabled, setFilterEnabled] = useState(false);
@@ -13,7 +15,12 @@ const Plugins: React.FC = () => {
     return (
         <div className="mx-auto max-w-3xl">
             <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Plugins</h1>
-            <div className="space-y-4">
+            
+            <Alert type="info" icon={<Plug className="h-5 w-5" />}>
+                Plugins allow you to modify or filter messages in transit. Enable and configure them to customize your forwarding behavior.
+            </Alert>
+
+            <div className="mt-6 space-y-4">
                 <CollapsibleSection title="Filter" defaultOpen={false}>
                     <Checkbox id="filter-enabled" label="Use this plugin: filter" checked={filterEnabled} onChange={setFilterEnabled} description="Blacklist or whitelist certain texts." className="mb-4" />
                     <div className="mt-4">

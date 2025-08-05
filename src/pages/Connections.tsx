@@ -3,7 +3,7 @@ import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
 import { Connection } from '../types';
-import { PlusCircle, Trash2, Save } from 'lucide-react';
+import { PlusCircle, Trash2, Save, Link as LinkIcon } from 'lucide-react';
 
 const initialConnections: Connection[] = [
     { id: 1, name: 'Main Forward', enabled: true, source: '-1001392052324', destinations: '-1001134939864\n-1001134939865', offset: '0', end: '0' },
@@ -49,7 +49,11 @@ const Connections: React.FC = () => {
         <div className="mx-auto max-w-4xl pb-24">
             <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Connections</h1>
             
-            <div className="mb-6 flex items-center border-b border-gray-200 dark:border-gray-700">
+            <Alert type="info" icon={<LinkIcon className="h-5 w-5" />}>
+                Connections define the flow of messages from a source to one or more destinations. Configure your forwarding rules here.
+            </Alert>
+
+            <div className="mt-6 mb-6 flex items-center border-b border-gray-200 dark:border-gray-700">
                 <div className="flex flex-grow items-center space-x-1 overflow-x-auto">
                     {connections.map((conn, index) => (
                         <button

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
+import { PlayCircle } from 'lucide-react';
 
 const logData = `
 2024/05/27 10:37:32 UTC INFO     Running tgcf 1.1.0 (main, Oct  2 2023, 21:59:40) [GCC 8.3.0]
@@ -32,7 +33,12 @@ const Run: React.FC = () => {
     return (
         <div className="mx-auto max-w-4xl">
             <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Run</h1>
-            <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+
+            <Alert type="info" icon={<PlayCircle className="h-5 w-5" />}>
+                Start or stop the tgcf process here. Choose your run mode (Live or Past) and monitor the real-time logs below.
+            </Alert>
+
+            <div className="mt-6 mb-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <h2 className="mb-4 text-lg font-medium dark:text-gray-200">Configuration</h2>
                 <Checkbox id="live-mode" label="Live Transfer Mode" checked={liveMode} onChange={setLiveMode} className="mb-4" />
                 <Checkbox id="past-mode" label="Past Transfer Mode" checked={pastMode} onChange={setPastMode} className="mb-4" />
