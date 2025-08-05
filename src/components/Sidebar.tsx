@@ -25,8 +25,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   mobileOpen,
   onCloseMobile,
 }) => {
-  // Common link renderer
-  const renderLinks = () => (
+  // Common link renderer (desktop and mobile share this)
+  const renderLinks = (showLabels: boolean) => (
     <nav className="flex-1 space-y-2 px-2 py-4">
       {NAV_ITEMS.map((item) => {
         const isActive = activePage === item.name;
@@ -45,9 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             }`}
           >
             <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
-            <span className={`${collapsed ? 'hidden' : 'block'} md:block`}>
-              {item.name}
-            </span>
+            {showLabels && <span>{item.name}</span>}
           </a>
         );
       })}
@@ -69,28 +67,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             title={collapsed ? 'Expand' : 'Collapse'}
           >
-            {collapsed ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 12 6 6v12z" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 12 6 6v12z" />
-              </svg>
-            )}
+            {/* Use a simple chevron; rotate when collapsed */}
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 transition-transform ${collapsed ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 12 6 6v12z" />
+            </svg>
           </button>
           {!collapsed && <div className="text-sm font-semibold">TGCF</div>}
           <div className="w-8" />
         </div>
 
-        {renderLinks()}
+        {/* Desktop: labels shown only when not collapsed */}
+        {renderLinks(!collapsed)}
 
         <div className="border-t border-slate-200 p-3 dark:border-slate-700">
           <ThemeToggle theme={theme} setTheme={setTheme} />
         </div>
       </aside>
 
-      {/* Mobile drawer */}
+      {/* Mobile overlay */}
       <div
         className={`fixed inset-0 z-30 bg-black/30 transition-opacity duration-200 md:hidden ${
           mobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
@@ -116,7 +110,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {renderLinks()}
+        {/* Mobile: always show labels */}
+        {renderLinks(true)}
 
         <div className="border-t border-slate-200 p-4 dark:border-slate-700">
           <ThemeToggle theme={theme} setTheme={setTheme} />
