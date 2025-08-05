@@ -5,30 +5,16 @@ interface LandingProps {
   onRegister: () => void;
 }
 
-const Landing: React.FC<LandingProps> = ({ onLogin, onRegister }) => {
+const Landing: React.FC<LandingProps> = () => {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
-      <div className="rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-6 sm:p-10 text-white shadow-lg">
+      <div className="rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-6 text-white shadow-lg sm:p-10">
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
           TGCF Web UI
         </h1>
         <p className="mt-3 max-w-2xl text-blue-50">
           Automate Telegram message forwarding with an elegant, configurable interface. Manage connections, plugins, and run modes with ease.
         </p>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <button
-            onClick={onLogin}
-            className="rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-blue-700 hover:bg-blue-50"
-          >
-            Login
-          </button>
-          <button
-            onClick={onRegister}
-            className="rounded-md border border-white/70 bg-transparent px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/10"
-          >
-            Register
-          </button>
-        </div>
       </div>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

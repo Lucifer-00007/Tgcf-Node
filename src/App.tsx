@@ -93,7 +93,7 @@ const App: React.FC = () => {
       default:
         return (
           <>
-            {/* Public header */}
+            {/* Public header with only Login */}
             <header className="sticky top-0 z-20 mb-6 border-b border-slate-200 bg-white/80 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/70">
               <div className="mx-auto flex max-w-6xl items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -107,17 +107,11 @@ const App: React.FC = () => {
                   >
                     Login
                   </button>
-                  <button
-                    onClick={() => setPublicRoute('register')}
-                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-                  >
-                    Register
-                  </button>
                 </div>
               </div>
             </header>
 
-            {/* Landing content */}
+            {/* Landing content (no CTA buttons inside) */}
             <Landing
               onLogin={() => setPublicRoute('login')}
               onRegister={() => setPublicRoute('register')}
