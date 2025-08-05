@@ -1,15 +1,26 @@
 # TGCF Web UI
 
-A web interface for managing `tgcf`, the ultimate tool to automate custom Telegram message forwarding. This project provides a user-friendly UI built with React, TypeScript, Vite, and Tailwind CSS.
+TGCF Web UI is a modern, responsive, and user-friendly web interface for `tgcf`, the powerful command-line tool for automating Telegram message forwarding. This project provides a comprehensive dashboard to manage all aspects of your `tgcf` configuration and monitor its activity without ever touching a configuration file manually.
+
+## Why Use TGCF Web UI?
+
+While `tgcf` is a potent tool, managing its configuration through YAML files can be cumbersome and error-prone for some users. This web interface aims to solve that by providing:
+
+-   **Visual Configuration:** A clean, intuitive interface for all settings, from API keys to complex plugin rules.
+-   **Reduced Errors:** Guided forms and inputs prevent common syntax mistakes that can occur when editing YAML files.
+-   **Accessibility:** Manage your `tgcf` instance from any device with a web browser, whether it's your desktop or phone.
+-   **Real-time Feedback:** A built-in log viewer lets you monitor the forwarding process in real-time, just like a terminal.
+-   **Centralized Management:** Control everything from one place—connections, plugins, credentials, and process status.
 
 ## Features
 
-- **Intuitive Configuration:** Manage all `tgcf` settings through a clean web interface.
-- **Connection Management:** Easily add, remove, and configure multiple source-to-destination connections.
-- **Plugin Control:** Enable and configure plugins like Filter, Format, Watermark, and more.
-- **Live Monitoring:** Run `tgcf` and view real-time logs directly in your browser.
-- **Secure:** Edit your sensitive credentials like API keys and tokens without hardcoding them.
-- **Modern Tech Stack:** Built with Vite for a fast development experience and optimized builds.
+-   **Dashboard:** A central hub for quick actions and an overview of your setup.
+-   **Secure Credential Management:** Securely input and manage your Telegram API ID, API hash, bot tokens, and session strings.
+-   **Dynamic Connection Setup:** Visually create, edit, and delete forwarding connections between source and destination chats.
+-   **Interactive Plugin Configuration:** Easily enable, disable, and configure powerful plugins like Filter, Format, Watermark, OCR, and more with user-friendly controls.
+-   **Process Control & Monitoring:** Start and stop the `tgcf` process and watch its output in a real-time log stream directly in the UI.
+-   **Advanced Settings:** For power users, an advanced section provides access to low-level configuration options and system information.
+-   **Light & Dark Mode:** Toggles between light and dark themes for a comfortable viewing experience.
 
 ## Prerequisites
 
