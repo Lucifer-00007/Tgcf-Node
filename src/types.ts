@@ -1,5 +1,6 @@
 export enum Page {
   Hello = 'Hello',
+  Profile = 'Profile',
   Credentials = 'Credentials',
   Admins = 'Admins',
   Connections = 'Connections',

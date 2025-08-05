@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, Link, Navigate } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Page } from './types';
 import Hello from './pages/Hello';
+import Profile from './pages/Profile';
 import Credentials from './pages/Credentials';
 import Admins from './pages/Admins';
 import Connections from './pages/Connections';
@@ -100,6 +101,7 @@ const App: React.FC = () => {
             </button>
             <Routes>
               <Route path="/hello" element={<Hello />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/credentials" element={<Credentials />} />
               <Route path="/admins" element={<Admins />} />
               <Route path="/connections" element={<Connections />} />
