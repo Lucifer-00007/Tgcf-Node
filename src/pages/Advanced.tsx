@@ -6,7 +6,7 @@ import { Alert } from '../components/Alert';
 const Advanced: React.FC = () => {
     const [agreed, setAgreed] = useState(false);
     const [enforceSeq, setEnforceSeq] = useState(false);
-    const [deleteOnEdit, setDeleteOnEdit] = useState(false);
+    const [deleteTrigger, setDeleteTrigger] = useState('.deleteMe');
     const [customizeBot, setCustomizeBot] = useState(false);
 
     return (
@@ -47,14 +47,23 @@ Platform Linux 6.8.0-1019-aws
                             onChange={setEnforceSeq} 
                             className="mb-4"
                         />
-                        <Checkbox 
-                            id="delete-edit" 
-                            label="Delete a message when source edited to .deleteMe" 
-                            checked={deleteOnEdit} 
-                            onChange={setDeleteOnEdit}
-                            description="When you edit the message in source to something particular, the message will be deleted in both source and destinations."
-                            className="mb-4"
-                        />
+                        
+                        <div className="mb-4">
+                            <label htmlFor="delete-trigger" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Delete a message when source edited to
+                            </label>
+                            <input
+                                id="delete-trigger"
+                                type="text"
+                                value={deleteTrigger}
+                                onChange={(e) => setDeleteTrigger(e.target.value)}
+                                className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                            />
+                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                When you edit the message in source to something particular, the message will be deleted in both source and destinations.
+                            </p>
+                        </div>
+
                         <Checkbox 
                             id="customize-bot" 
                             label="Customize Bot Messages" 
