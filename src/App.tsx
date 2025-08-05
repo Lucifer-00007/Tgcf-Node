@@ -14,7 +14,7 @@ import Register from './pages/Register';
 
 export type Theme = 'light' | 'dark';
 
-type LandingPanel = 'none' | 'login' | 'register';
+type PublicRoute = 'landing' | 'login' | 'register';
 
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>(Page.Hello);
@@ -26,7 +26,7 @@ const App: React.FC = () => {
     }
     return false;
   });
-  const [landingPanel, setLandingPanel] = useState<LandingPanel>('none');
+  const [publicRoute, setPublicRoute] = useState<PublicRoute>('landing');
 
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
@@ -59,6 +59,7 @@ const App: React.FC = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('auth');
     setActivePage(Page.Hello);
+    setPublicRoute('landing');
   };
 
   const renderProtectedPage = () => {
@@ -82,13 +83,73 @@ const App: React.FC = () => {
     }
   };
 
+  const renderPublicPage = () => {
+    switch (publicRoute) {
+      case 'login':
+        return <Login onSuccess={login} onGoRegister={() => setPublicRoute('register')} />;
+      case 'register':
+        return <Register onSuccess={login} onGoLogin={() => setPublicRoute('login')} />;
+      case 'landing':
+      default:
+        return (
+          <>
+            {/* Public header */}
+            <header className="sticky top-0 z-20 mb-6 border-b border-slate-200 bg-white/80 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/70">
+              <div className="mx-auto flex max-w-6xl items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold">T</span>
+                  <span className="text-sm font-semibold">TGCF Web UI</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPublicRoute('login')}
+                    className="rounded-md px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => setPublicRoute('register')}
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                  >
+                    Register
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            {/* Landing content */}
+            <Landing
+              onLogin={() => setPublicRoute('login')}
+              onRegister={() => setPublicRoute('register')}
+            />
+
+            {/* Footer actions */}
+            <div className="mx-auto my-10 flex max-w-6xl justify-center gap-3">
+              <button
+                onClick={() => setActivePage(Page.Hello)}
+                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+              >
+                Explore demo content
+              </button>
+              <button
+                onClick={() => setActivePage(Page.Hello)}
+                className="rounded-md px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                Learn more
+              </button>
+            </div>
+          </>
+        );
+    }
+  };
+
   const sidebarWidth = collapsed ? 'md:ml-20' : 'md:ml-64';
 
   return (
     <div className="flex h-screen bg-gray-100 font-sans text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <div className="fixed left-0 top-0 h-1 w-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"></div>
 
-      {/* Mobile top bar (when authenticated, controls sidebar) */}
+      {/* Mobile top bar (authenticated only) */}
       {isAuthenticated && (
         <header className="fixed left-0 top-1 z-30 flex h-14 w-full items-center justify-between bg-white/80 px-4 backdrop-blur-md dark:bg-gray-800/80 md:hidden">
           <button
@@ -124,71 +185,7 @@ const App: React.FC = () => {
 
       <main className={`relative flex-1 overflow-y-auto ${isAuthenticated ? 'pt-16 md:pt-12' : 'pt-0'} ${isAuthenticated ? sidebarWidth : ''} px-4 sm:px-6 md:px-8`}>
         {!isAuthenticated ? (
-          <>
-            {/* Public header */}
-            <header className="sticky top-0 z-20 mb-6 border-b border-slate-200 bg-white/80 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/70">
-              <div className="mx-auto flex max-w-6xl items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold">T</span>
-                  <span className="text-sm font-semibold">TGCF Web UI</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setLandingPanel(landingPanel === 'login' ? 'none' : 'login')}
-                    className="rounded-md px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => setLandingPanel(landingPanel === 'register' ? 'none' : 'register')}
-                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-                  >
-                    Register
-                  </button>
-                </div>
-              </div>
-            </header>
-
-            {/* Landing content */}
-            <Landing
-              onLogin={() => setLandingPanel(landingPanel === 'login' ? 'none' : 'login')}
-              onRegister={() => setLandingPanel(landingPanel === 'register' ? 'none' : 'register')}
-            />
-
-            {/* Collapsible auth panels (hidden until clicked) */}
-            {landingPanel !== 'none' && (
-              <div className="mx-auto mt-6 w-full max-w-6xl">
-                <div className="grid gap-6 md:grid-cols-2">
-                  {landingPanel === 'login' && (
-                    <div className="md:col-span-1">
-                      <Login onSuccess={login} onGoRegister={() => setLandingPanel('register')} />
-                    </div>
-                  )}
-                  {landingPanel === 'register' && (
-                    <div className="md:col-span-1">
-                      <Register onSuccess={login} onGoLogin={() => setLandingPanel('login')} />
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Footer actions */}
-            <div className="mx-auto my-10 flex max-w-6xl justify-center gap-3">
-              <button
-                onClick={() => setActivePage(Page.Hello)}
-                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-              >
-                Explore demo content
-              </button>
-              <button
-                onClick={() => setActivePage(Page.Hello)}
-                className="rounded-md px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-              >
-                Learn more
-              </button>
-            </div>
-          </>
+          renderPublicPage()
         ) : (
           <>
             <div className="mb-4 flex items-center justify-end">
