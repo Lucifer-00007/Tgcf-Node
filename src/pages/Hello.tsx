@@ -4,11 +4,33 @@ import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Link as LinkIcon, PlayCircle, Plug, KeyRound } from 'lucide-react';
 
 const TelegramIcon = () => (
-    <div className="relative h-24 w-24 flex-shrink-0">
+    <div className="group relative h-24 w-24 flex-shrink-0">
         <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0">
-            <path d="M48 96C74.5097 96 96 74.5097 96 48C96 21.4903 74.5097 0 48 0C21.4903 0 0 21.4903 0 48C0 74.5097 21.4903 96 48 96Z" fill="#37AEE2"/>
-            <path d="M72.9999 24L18 43.518L37.9427 49.3033L43.728 69.246L72.9999 24Z" fill="#C8DAEA"/>
-            <path d="M37.9426 49.3033L58.5 33L43.728 49.3033V69.246L37.9426 49.3033Z" fill="#A9C9DD"/>
+            <defs>
+                <radialGradient id="tg-gradient-bg" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+                    <stop offset="0%" stopColor="#4AB3E5" />
+                    <stop offset="100%" stopColor="#2A96C8" />
+                </radialGradient>
+                <linearGradient id="tg-gradient-plane" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#FFFFFF" />
+                    <stop offset="100%" stopColor="#D1E4F0" />
+                </linearGradient>
+                <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+                    <feOffset dx="1" dy="2" result="offsetblur"/>
+                    <feFlood floodColor="rgba(0,0,0,0.2)"/>
+                    <feComposite in2="offsetblur" operator="in"/>
+                    <feMerge>
+                        <feMergeNode/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <circle cx="48" cy="48" r="48" fill="url(#tg-gradient-bg)" />
+            <g className="transition-transform duration-300 ease-in-out group-hover:scale-110 group-hover:-translate-y-1 group-hover:rotate-3">
+                <path d="M73 24L18 43.518L37.9427 49.3033L43.728 69.246L73 24Z" fill="url(#tg-gradient-plane)" style={{ filter: 'url(#drop-shadow)' }}/>
+                <path d="M37.9426 49.3033L58.5 33L43.728 49.3033V69.246L37.9426 49.3033Z" fill="#B2CFE0"/>
+            </g>
         </svg>
     </div>
 );
