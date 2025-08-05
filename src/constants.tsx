@@ -13,9 +13,10 @@ const KeyIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const StarIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.321h5.365a.562.562 0 01.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.528 5.318a.562.562 0 01-.84.622l-4.204-3.602a.563.563 0 00-.667 0l-4.204 3.602a.562.562 0 01-.84-.622l1.528-5.318a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988h5.365a.563.563 0 00.475-.321L11.48 3.5z" />
+const ShieldCheckIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3.25l6 2.25v5.25c0 4.97-3.2 8.47-6 9.75-2.8-1.28-6-4.78-6-9.75V5.5l6-2.25z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9.5 11.75l1.75 1.75 3.25-3.25" />
   </svg>
 );
 
@@ -25,7 +26,6 @@ const LinkIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-/* New, clearer icons */
 const PlugIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 13l6-6m-1.5 7.5l3-3a3 3 0 10-4.243-4.243l-3 3M7.5 15L6 16.5a4.243 4.243 0 006 6L13.5 21" />
@@ -48,7 +48,7 @@ const SlidersIcon: React.FC<{ className?: string }> = ({ className }) => (
 export const NAV_ITEMS = [
   { name: Page.Hello, icon: HandWaveIcon },
   { name: Page.TelegramLogin, icon: KeyIcon },
-  { name: Page.Admins, icon: StarIcon },
+  { name: Page.Admins, icon: ShieldCheckIcon },
   { name: Page.Connections, icon: LinkIcon },
   { name: Page.Plugins, icon: PlugIcon },
   { name: Page.Run, icon: PlayCircleIcon },
