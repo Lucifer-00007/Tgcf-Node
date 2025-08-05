@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
-import { AlertTriangle, Copy, Download, Save, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, Copy, Download, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const versionInfo = `Running tgcf 1.1.0 (main, Oct  2 2023, 21:59:40) [GCC 8.3.0]
@@ -28,34 +28,18 @@ const configJson = `{
   ]
 }`;
 
-const CodeBlock: React.FC<{ 
-    title: string; 
-    children: React.ReactNode; 
-    onCopy?: () => void;
-    isCollapsible?: boolean;
-    isCollapsed?: boolean;
-    onToggle?: () => void;
-}> = ({ title, children, onCopy, isCollapsible, isCollapsed, onToggle }) => (
+const CodeBlock: React.FC<{ title: string; children: React.ReactNode; onCopy?: () => void }> = ({ title, children, onCopy }) => (
     <div className="rounded-lg border border-slate-200 bg-white dark:border-gray-700 dark:bg-gray-800">
         <div className="flex items-center justify-between border-b border-slate-200 px-4 py-2 dark:border-gray-700">
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{title}</p>
-            <div className="flex items-center gap-4">
-                {onCopy && (
-                    <button onClick={onCopy} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" title="Copy to clipboard">
-                        <Copy className="h-4 w-4" />
-                    </button>
-                )}
-                {isCollapsible && (
-                     <button onClick={onToggle} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" title={isCollapsed ? "Expand" : "Collapse"}>
-                        {isCollapsed ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
-                    </button>
-                )}
-            </div>
+            {onCopy && (
+                <button onClick={onCopy} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" title="Copy to clipboard">
+                    <Copy className="h-4 w-4" />
+                </button>
+            )}
         </div>
-        <pre className={`overflow-x-auto bg-slate-50 p-4 text-sm text-gray-700 dark:bg-gray-900/50 dark:text-gray-300 ${isCollapsible && isCollapsed ? 'text-center' : ''}`}>
-            <code>
-                {isCollapsible && isCollapsed ? '{...}' : children}
-            </code>
+        <pre className="overflow-x-auto bg-slate-50 p-4 text-sm text-gray-700 dark:bg-gray-900/50 dark:text-gray-300">
+            <code>{children}</code>
         </pre>
     </div>
 );
@@ -63,7 +47,6 @@ const CodeBlock: React.FC<{
 
 const Advanced: React.FC = () => {
     const [agreed, setAgreed] = useState(false);
-    const [configCollapsed, setConfigCollapsed] = useState(true);
     const [enforceSeq, setEnforceSeq] = useState(false);
     const [deleteTrigger, setDeleteTrigger] = useState('.deleteMe');
     const [customizeBot, setCustomizeBot] = useState(false);
@@ -103,13 +86,7 @@ const Advanced: React.FC = () => {
                             <CodeBlock title="Version & Platform" onCopy={() => handleCopy(versionInfo, 'Version Info')}>
                                 {versionInfo}
                             </CodeBlock>
-                            <CodeBlock 
-                                title="Current Configuration" 
-                                onCopy={() => handleCopy(configJson, 'Configuration')}
-                                isCollapsible={true}
-                                isCollapsed={configCollapsed}
-                                onToggle={() => setConfigCollapsed(!configCollapsed)}
-                            >
+                            <CodeBlock title="Current Configuration" onCopy={() => handleCopy(configJson, 'Configuration')}>
                                 {configJson}
                             </CodeBlock>
                             <div className="flex justify-end">
