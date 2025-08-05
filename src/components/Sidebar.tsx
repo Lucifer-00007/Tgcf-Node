@@ -1,13 +1,11 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { NAV_ITEMS } from '../constants';
-import { Page } from '../types';
 import { Theme } from '../App';
 import ThemeToggle from './ThemeToggle';
 import { LogOut } from 'lucide-react';
 
 interface SidebarProps {
-  activePage: Page;
-  setActivePage: (page: Page) => void;
   theme: Theme;
   setTheme: (theme: Theme) => void;
   collapsed: boolean;
@@ -18,8 +16,6 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  activePage,
-  setActivePage,
   theme,
   setTheme,
   collapsed,
@@ -31,24 +27,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const renderLinks = (showLabels: boolean) => (
     <nav className="flex-1 space-y-2 px-2 py-4">
       {NAV_ITEMS.map((item) => {
-        const isActive = activePage === item.name;
+        const path = `/${item.name.toLowerCase().replace(/ /g, '-')}`;
         return (
-          <a
+          <NavLink
             key={item.name}
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              setActivePage(item.name);
-            }}
-            className={`group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
-              isActive
-                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
-                : 'text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700'
-            }`}
+            to={path}
+            onClick={onCloseMobile}
+            className={({ isActive }) =>
+              `group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
+                isActive
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
+                  : 'text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700'
+              }`
+            }
           >
             <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
             {showLabels && <span>{item.name}</span>}
-          </a>
+          </NavLink>
         );
       })}
     </nav>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Twitter, Github, Disc } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -10,35 +11,35 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Product</h3>
             <ul className="mt-4 space-y-2">
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Features</a></li>
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Security</a></li>
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Changelog</a></li>
+              <li><Link to="/features" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Features</Link></li>
+              <li><Link to="/security" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Security</Link></li>
+              <li><Link to="/changelog" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Changelog</Link></li>
             </ul>
           </div>
           {/* Column 2 */}
           <div>
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Company</h3>
             <ul className="mt-4 space-y-2">
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">About</a></li>
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Blog</a></li>
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Contact</a></li>
+              <li><Link to="/about" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">About</Link></li>
+              <li><Link to="/blog" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Blog</Link></li>
+              <li><Link to="/contact" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Contact</Link></li>
             </ul>
           </div>
           {/* Column 3 */}
           <div>
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Resources</h3>
             <ul className="mt-4 space-y-2">
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Documentation</a></li>
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">API Status</a></li>
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Support</a></li>
+              <li><Link to="/documentation" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Documentation</Link></li>
+              <li><Link to="/api-status" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">API Status</Link></li>
+              <li><Link to="/support" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Support</Link></li>
             </ul>
           </div>
           {/* Column 4 */}
           <div>
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Legal</h3>
             <ul className="mt-4 space-y-2">
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Terms of Service</a></li>
-              <li><a href="#" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Privacy Policy</a></li>
+              <li><Link to="/terms-of-service" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Terms of Service</Link></li>
+              <li><Link to="/privacy-policy" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Privacy Policy</Link></li>
             </ul>
           </div>
         </div>

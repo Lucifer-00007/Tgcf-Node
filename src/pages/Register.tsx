@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { User, Mail, Lock } from 'lucide-react';
 
 interface RegisterProps {
   onSuccess: () => void;
-  onGoLogin: () => void;
 }
 
-const Register: React.FC<RegisterProps> = ({ onSuccess, onGoLogin }) => {
+const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
   const [name, setName] = useState('Jane Doe');
   const [email, setEmail] = useState('jane@example.com');
   const [password, setPassword] = useState('password');
@@ -23,7 +23,6 @@ const Register: React.FC<RegisterProps> = ({ onSuccess, onGoLogin }) => {
       setError('Passwords do not match.');
       return;
     }
-    // Dummy success
     setError('');
     onSuccess();
   };
@@ -38,9 +37,9 @@ const Register: React.FC<RegisterProps> = ({ onSuccess, onGoLogin }) => {
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create your account</h1>
             <p className="mt-1 text-gray-500 dark:text-gray-400">
                 Or{' '}
-                <button type="button" onClick={onGoLogin} className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+                <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
                     sign in to your existing account
-                </button>
+                </Link>
             </p>
         </div>
 

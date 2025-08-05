@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, Link, Navigate } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Page } from './types';
 import Hello from './pages/Hello';
@@ -13,13 +14,22 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ThemeToggle from './components/ThemeToggle';
 import { Menu } from 'lucide-react';
+import Footer from './components/Footer';
+import Features from './pages/Features';
+import Security from './pages/Security';
+import Changelog from './pages/Changelog';
+import About from './pages/About';
+import Blog from './pages/Blog';
+import Contact from './pages/Contact';
+import Documentation from './pages/Documentation';
+import ApiStatus from './pages/ApiStatus';
+import Support from './pages/Support';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 export type Theme = 'light' | 'dark';
 
-type PublicRoute = 'landing' | 'login' | 'register';
-
 const App: React.FC = () => {
-  const [activePage, setActivePage] = useState<Page>(Page.Hello);
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -28,7 +38,7 @@ const App: React.FC = () => {
     }
     return false;
   });
-  const [publicRoute, setPublicRoute] = useState<PublicRoute>('landing');
+  const navigate = useNavigate();
 
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
@@ -54,52 +64,13 @@ const App: React.FC = () => {
   const login = () => {
     setIsAuthenticated(true);
     localStorage.setItem('auth', '1');
-    setActivePage(Page.Hello);
+    navigate('/hello');
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('auth');
-    setActivePage(Page.Hello);
-    setPublicRoute('landing');
-  };
-
-  const renderProtectedPage = () => {
-    switch (activePage) {
-      case Page.Hello:
-        return <Hello />;
-      case Page.TelegramLogin:
-        return <TelegramLogin />;
-      case Page.Admins:
-        return <Admins />;
-      case Page.Connections:
-        return <Connections />;
-      case Page.Plugins:
-        return <Plugins />;
-      case Page.Run:
-        return <Run />;
-      case Page.Advanced:
-        return <Advanced />;
-      default:
-        return <Hello />;
-    }
-  };
-
-  const renderPublicContent = () => {
-    const exploreDemo = () => {
-      setIsAuthenticated(true);
-      setActivePage(Page.Hello);
-    };
-
-    switch (publicRoute) {
-      case 'login':
-        return <Login onSuccess={login} onGoRegister={() => setPublicRoute('register')} />;
-      case 'register':
-        return <Register onSuccess={login} onGoLogin={() => setPublicRoute('login')} />;
-      case 'landing':
-      default:
-        return <Landing onExplore={exploreDemo} />;
-    }
+    navigate('/');
   };
 
   const sidebarWidth = collapsed ? 'md:ml-20' : 'md:ml-64';
@@ -111,11 +82,6 @@ const App: React.FC = () => {
       {isAuthenticated ? (
         <div className="flex h-screen">
           <Sidebar
-            activePage={activePage}
-            setActivePage={(p) => {
-              setActivePage(p);
-              setMobileOpen(false);
-            }}
             theme={theme}
             setTheme={setTheme}
             collapsed={collapsed}
@@ -132,32 +98,58 @@ const App: React.FC = () => {
             >
               <Menu className="h-6 w-6" />
             </button>
-            {renderProtectedPage()}
+            <Routes>
+              <Route path="/hello" element={<Hello />} />
+              <Route path="/telegram-login" element={<TelegramLogin />} />
+              <Route path="/admins" element={<Admins />} />
+              <Route path="/connections" element={<Connections />} />
+              <Route path="/plugins" element={<Plugins />} />
+              <Route path="/run" element={<Run />} />
+              <Route path="/advanced" element={<Advanced />} />
+              <Route path="*" element={<Navigate to="/hello" />} />
+            </Routes>
           </main>
         </div>
       ) : (
-        <>
+        <div className="flex min-h-screen flex-col">
           <header className="sticky top-1 z-20 border-b border-slate-200 bg-white/80 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/70">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
-              <div className="flex items-center gap-2">
+              <Link to="/" className="flex items-center gap-2">
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold">T</span>
                 <span className="text-sm font-semibold">TGCF Web UI</span>
-              </div>
+              </Link>
               <div className="flex items-center gap-4">
                 <ThemeToggle theme={theme} setTheme={setTheme} />
-                <button
-                  onClick={() => setPublicRoute('login')}
+                <Link
+                  to="/login"
                   className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                 >
                   Login
-                </button>
+                </Link>
               </div>
             </div>
           </header>
-          <main className="relative flex-1 overflow-y-auto px-4 sm:px-6 md:px-8">
-            {renderPublicContent()}
+          <main className="relative flex-1">
+            <Routes>
+              <Route path="/" element={<Landing onExplore={login} />} />
+              <Route path="/login" element={<Login onSuccess={login} />} />
+              <Route path="/register" element={<Register onSuccess={login} />} />
+              <Route path="/features" element={<Features />} />
+              <Route path="/security" element={<Security />} />
+              <Route path="/changelog" element={<Changelog />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/documentation" element={<Documentation />} />
+              <Route path="/api-status" element={<ApiStatus />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
           </main>
-        </>
+          <Footer />
+        </div>
       )}
     </div>
   );

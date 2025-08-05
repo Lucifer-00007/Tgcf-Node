@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 
 interface LoginProps {
   onSuccess: () => void;
-  onGoRegister: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onSuccess, onGoRegister }) => {
+const Login: React.FC<LoginProps> = ({ onSuccess }) => {
   const [email, setEmail] = useState('user@example.com');
   const [password, setPassword] = useState('password');
   const [error, setError] = useState<string>('');
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Dummy credentials
     if (email === 'user@example.com' && password === 'password') {
       setError('');
       onSuccess();
@@ -32,9 +31,9 @@ const Login: React.FC<LoginProps> = ({ onSuccess, onGoRegister }) => {
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Sign in to your account</h1>
             <p className="mt-1 text-gray-500 dark:text-gray-400">
                 Or{' '}
-                <button type="button" onClick={onGoRegister} className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+                <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
                     create a new account
-                </button>
+                </Link>
             </p>
         </div>
 
