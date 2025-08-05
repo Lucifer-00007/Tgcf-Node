@@ -15,7 +15,7 @@ const Advanced: React.FC = () => {
             <Alert type="warning">This page is for developers and advanced users.</Alert>
 
             <div className="mt-6">
-                <Checkbox id="agree" label="I agree to proceed with caution" checked={agreed} onChange={setAgreed} />
+                <Checkbox id="agree" label="I agree to proceed with caution" checked={agreed} onChange={setAgreed} className="mb-4" />
             </div>
 
             {agreed && (
@@ -45,6 +45,7 @@ Platform Linux 6.8.0-1019-aws
                             label="Enforce sequential updates"
                             checked={enforceSeq} 
                             onChange={setEnforceSeq} 
+                            className="mb-4"
                         />
                         <Checkbox 
                             id="delete-edit" 
@@ -52,12 +53,14 @@ Platform Linux 6.8.0-1019-aws
                             checked={deleteOnEdit} 
                             onChange={setDeleteOnEdit}
                             description="When you edit the message in source to something particular, the message will be deleted in both source and destinations."
+                            className="mb-4"
                         />
                         <Checkbox 
                             id="customize-bot" 
                             label="Customize Bot Messages" 
                             checked={customizeBot} 
                             onChange={setCustomizeBot}
+                            className="mb-4"
                         />
                     </CollapsibleSection>
                     

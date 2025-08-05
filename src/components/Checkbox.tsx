@@ -6,11 +6,12 @@ interface CheckboxProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   description?: string;
+  className?: string;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ label, id, checked, onChange, description }) => {
+export const Checkbox: React.FC<CheckboxProps> = ({ label, id, checked, onChange, description, className }) => {
   return (
-    <div className="mb-4 flex flex-col">
+    <div className={`flex flex-col ${className}`}>
         <div className="flex items-center">
             <input
                 id={id}

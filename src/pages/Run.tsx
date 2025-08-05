@@ -34,8 +34,8 @@ const Run: React.FC = () => {
             <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Run</h1>
             <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <h2 className="mb-4 text-lg font-medium dark:text-gray-200">Configuration</h2>
-                <Checkbox id="live-mode" label="Live Transfer Mode" checked={liveMode} onChange={setLiveMode} />
-                <Checkbox id="past-mode" label="Past Transfer Mode" checked={pastMode} onChange={setPastMode} />
+                <Checkbox id="live-mode" label="Live Transfer Mode" checked={liveMode} onChange={setLiveMode} className="mb-4" />
+                <Checkbox id="past-mode" label="Past Transfer Mode" checked={pastMode} onChange={setPastMode} className="mb-4" />
                 <div className="my-4">
                     <Alert type="warning">
                         You must click the save button for changes to apply.
