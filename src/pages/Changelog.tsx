@@ -3,7 +3,10 @@ import GenericPage from '../components/GenericPage';
 
 const Changelog: React.FC = () => {
   return (
-    <GenericPage title="Changelog">
+    <GenericPage 
+      title="Changelog"
+      subtitle="Tracking all the new features, fixes, and improvements to the TGCF Web UI."
+    >
       <h3>Version 1.0.0 - Initial Release</h3>
       <p><em>Date: 2024-05-28</em></p>
       <ul>
