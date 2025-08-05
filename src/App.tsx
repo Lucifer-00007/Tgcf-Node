@@ -8,7 +8,9 @@ import Connections from './pages/Connections';
 import Plugins from './pages/Plugins';
 import Run from './pages/Run';
 import Advanced from './pages/Advanced';
-import Auth from './pages/Auth';
+import Landing from './pages/Landing';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 export type Theme = 'light' | 'dark';
 
@@ -16,6 +18,12 @@ const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>(Page.Hello);
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('auth') === '1';
+    }
+    return false;
+  });
 
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
@@ -38,7 +46,19 @@ const App: React.FC = () => {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const renderPage = () => {
+  const login = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('auth', '1');
+    setActivePage(Page.Hello);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('auth');
+    setActivePage(Page.Hello);
+  };
+
+  const renderProtectedPage = () => {
     switch (activePage) {
       case Page.Hello:
         return <Hello />;
@@ -54,8 +74,6 @@ const App: React.FC = () => {
         return <Run />;
       case Page.Advanced:
         return <Advanced />;
-      case Page.Auth:
-        return <Auth onAuthSuccess={() => setActivePage(Page.Hello)} />;
       default:
         return <Hello />;
     }
@@ -83,22 +101,62 @@ const App: React.FC = () => {
         <div className="w-8" />
       </header>
 
-      <Sidebar
-        activePage={activePage}
-        setActivePage={(p) => {
-          setActivePage(p);
-          setMobileOpen(false);
-        }}
-        theme={theme}
-        setTheme={setTheme}
-        collapsed={collapsed}
-        onToggleCollapsed={() => setCollapsed((v) => !v)}
-        mobileOpen={mobileOpen}
-        onCloseMobile={() => setMobileOpen(false)}
-      />
+      {/* Sidebar hidden when not authenticated */}
+      {isAuthenticated && (
+        <Sidebar
+          activePage={activePage}
+          setActivePage={(p) => {
+            setActivePage(p);
+            setMobileOpen(false);
+          }}
+          theme={theme}
+          setTheme={setTheme}
+          collapsed={collapsed}
+          onToggleCollapsed={() => setCollapsed((v) => !v)}
+          mobileOpen={mobileOpen}
+          onCloseMobile={() => setMobileOpen(false)}
+        />
+      )}
 
-      <main className={`relative flex-1 overflow-y-auto pt-16 md:pt-12 ${sidebarWidth} px-4 sm:px-6 md:px-8`}>
-        {renderPage()}
+      <main className={`relative flex-1 overflow-y-auto pt-16 md:pt-12 ${isAuthenticated ? sidebarWidth : ''} px-4 sm:px-6 md:px-8`}>
+        {!isAuthenticated ? (
+          // Unauthenticated flow: Landing with buttons to login/register pages
+          <>
+            <Landing onLogin={login} onRegister={login} />
+            <div className="mx-auto mt-8 flex max-w-5xl justify-center gap-3">
+              <button
+                onClick={() => setActivePage(Page.Hello)}
+                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+              >
+                Explore demo content
+              </button>
+              <button
+                onClick={() => setActivePage(Page.Hello)}
+                className="rounded-md px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700"
+              >
+                Learn more
+              </button>
+            </div>
+            <div className="mx-auto mt-10 max-w-md">
+              <Login onSuccess={login} onGoRegister={() => { /* kept for UI parity, no enum navigation */ }} />
+            </div>
+            <div className="mx-auto mt-10 max-w-md">
+              <Register onSuccess={login} onGoLogin={() => { /* kept for UI parity, no enum navigation */ }} />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="mb-4 flex items-center justify-end">
+              <button
+                onClick={logout}
+                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+              >
+                Logout
+              </button>
+            </div>
+            {renderProtectedPage()}
+          </>
+        )}
       </main>
     </div>
   );

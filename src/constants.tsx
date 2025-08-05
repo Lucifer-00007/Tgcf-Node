@@ -53,5 +53,4 @@ export const NAV_ITEMS = [
   { name: Page.Plugins, icon: PlugIcon },
   { name: Page.Run, icon: PlayCircleIcon },
   { name: Page.Advanced, icon: SlidersIcon },
-  { name: Page.Auth, icon: KeyIcon },
 ];

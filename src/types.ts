@@ -6,5 +6,4 @@ export enum Page {
   Plugins = 'Plugins',
   Run = 'Run',
   Advanced = 'Advanced',
-  Auth = 'Auth',
 }
