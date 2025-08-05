@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { CollapsibleSection } from '../components/CollapsibleSection';
 
 const EyeIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
@@ -19,9 +20,10 @@ interface PasswordInputProps {
     label: string;
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    placeholder?: string;
 }
 
-const PasswordInput: React.FC<PasswordInputProps> = ({ id, label, value, onChange }) => {
+const PasswordInput: React.FC<PasswordInputProps> = ({ id, label, value, onChange, placeholder }) => {
     const [visible, setVisible] = useState(false);
 
     return (
@@ -33,6 +35,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ id, label, value, onChang
                     type={visible ? 'text' : 'password'}
                     value={value}
                     onChange={onChange}
+                    placeholder={placeholder}
                     className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
                 />
                 <button
@@ -51,6 +54,7 @@ const Credentials: React.FC = () => {
     const [apiId, setApiId] = useState('**********');
     const [apiHash, setApiHash] = useState('**********************');
     const [botToken, setBotToken] = useState('**********************');
+    const [sessionString, setSessionString] = useState('');
     const [accountType, setAccountType] = useState('bot');
 
     return (
@@ -117,9 +121,47 @@ const Credentials: React.FC = () => {
                     />
                 )}
 
+                {accountType === 'user' && (
+                    <>
+                        <PasswordInput
+                            id="session-string"
+                            label="Enter session string"
+                            value={sessionString}
+                            onChange={(e) => setSessionString(e.target.value)}
+                        />
+                        <div className="-mt-2">
+                            <CollapsibleSection title="How to get session string ?">
+                                <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                                    <p>
+                                        Link to repl: <a href="https://replit.com/@aahnik/tg-login?v=1" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://replit.com/@aahnik/tg-login?v=1</a>
+                                    </p>
+                                    <p>
+                                        Click on the above link and enter api id, api hash, and phone no to generate session string.
+                                    </p>
+                                    <div>
+                                        <p className="font-semibold text-gray-700 dark:text-gray-300">Note from developer:</p>
+                                        <p className="mt-1">
+                                            Due some issues logging in with a user account using a phone no is not supported in this web interface.
+                                        </p>
+                                        <p className="mt-2">
+                                            I have built a command-line program named tg-login (<a href="https://github.com/aahnik/tg-login" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://github.com/aahnik/tg-login</a>) that can generate the session string for you.
+                                        </p>
+                                        <p className="mt-2">
+                                            You can run tg-login on your computer, or securely in this repl. tg-login is open source, and you can also inspect the bash script running in the repl.
+                                        </p>
+                                    </div>
+                                    <p>
+                                        What is a session string ? <a href="https://docs.telethon.dev/en/stable/concepts/sessions.html#string-sessions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://docs.telethon.dev/en/stable/concepts/sessions.html#string-sessions</a>
+                                    </p>
+                                </div>
+                            </CollapsibleSection>
+                        </div>
+                    </>
+                )}
+
                 <button
                     type="button"
-                    className="w-auto rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
+                    className="mt-6 w-auto rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
                 >
                     Save
                 </button>
