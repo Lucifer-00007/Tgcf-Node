@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, Plug, PlayCircle, Shield, KeyRound, Settings, Rocket, Quote } from 'lucide-react';
-import Footer from '../components/Footer';
 
 interface LandingProps {
   onExplore: () => void;
@@ -141,7 +140,6 @@ const Landing: React.FC<LandingProps> = ({ onExplore }) => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };
