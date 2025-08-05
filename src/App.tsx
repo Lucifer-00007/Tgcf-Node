@@ -12,7 +12,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ThemeToggle from './components/ThemeToggle';
-import Header from './components/Header';
+import { Menu } from 'lucide-react';
 
 export type Theme = 'light' | 'dark';
 
@@ -117,12 +117,6 @@ const App: React.FC = () => {
 
       {isAuthenticated ? (
         <div className="flex h-screen">
-          <Header
-            onToggleMobileSidebar={() => setMobileOpen(true)}
-            onLogout={logout}
-            theme={theme}
-            setTheme={setTheme}
-          />
           <Sidebar
             activePage={activePage}
             setActivePage={(p) => {
@@ -135,8 +129,16 @@ const App: React.FC = () => {
             onToggleCollapsed={() => setCollapsed((v) => !v)}
             mobileOpen={mobileOpen}
             onCloseMobile={() => setMobileOpen(false)}
+            onLogout={logout}
           />
-          <main className={`relative w-full flex-1 overflow-y-auto pt-20 ${sidebarWidth} px-4 sm:px-6 md:px-8`}>
+          <main className={`relative w-full flex-1 overflow-y-auto pt-8 ${sidebarWidth} px-4 sm:px-6 md:px-8`}>
+            <button
+              aria-label="Open sidebar"
+              className="absolute top-4 left-4 z-10 rounded-md p-2 text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 md:hidden"
+              onClick={() => setMobileOpen(true)}
+            >
+              <Menu className="h-6 w-6" />
+            </button>
             {renderProtectedPage()}
           </main>
         </div>
