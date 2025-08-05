@@ -12,6 +12,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ThemeToggle from './components/ThemeToggle';
+import Header from './components/Header';
 
 export type Theme = 'light' | 'dark';
 
@@ -84,7 +85,7 @@ const App: React.FC = () => {
     }
   };
 
-  const renderPublicPage = () => {
+  const renderPublicContent = () => {
     switch (publicRoute) {
       case 'login':
         return <Login onSuccess={login} onGoRegister={() => setPublicRoute('register')} />;
@@ -94,40 +95,13 @@ const App: React.FC = () => {
       default:
         return (
           <>
-            {/* Public header with Login and Theme Toggle */}
-            <header className="sticky top-0 z-20 mb-6 border-b border-slate-200 bg-white/80 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/70">
-              <div className="mx-auto flex max-w-6xl items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold">T</span>
-                  <span className="text-sm font-semibold">TGCF Web UI</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <ThemeToggle theme={theme} setTheme={setTheme} />
-                  <button
-                    onClick={() => setPublicRoute('login')}
-                    className="rounded-md px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
-                  >
-                    Login
-                  </button>
-                </div>
-              </div>
-            </header>
-
             <Landing />
-
-            {/* Footer actions */}
             <div className="mx-auto my-10 flex max-w-6xl justify-center gap-3">
               <button
-                onClick={() => setActivePage(Page.Hello)}
+                onClick={() => { setIsAuthenticated(true); setActivePage(Page.Hello); }}
                 className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
               >
-                Explore demo content
-              </button>
-              <button
-                onClick={() => setActivePage(Page.Hello)}
-                className="rounded-md px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-              >
-                Learn more
+                Explore demo
               </button>
             </div>
           </>
@@ -138,60 +112,58 @@ const App: React.FC = () => {
   const sidebarWidth = collapsed ? 'md:ml-20' : 'md:ml-64';
 
   return (
-    <div className="flex h-screen bg-gray-100 font-sans text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-      <div className="fixed left-0 top-0 h-1 w-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"></div>
+    <div className="bg-gray-100 font-sans text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <div className="fixed left-0 top-0 h-1 w-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 z-50"></div>
 
-      {/* Mobile top bar (authenticated only) */}
-      {isAuthenticated && (
-        <header className="fixed left-0 top-1 z-30 flex h-14 w-full items-center justify-between bg-white/80 px-4 backdrop-blur-md dark:bg-gray-800/80 md:hidden">
-          <button
-            aria-label="Toggle sidebar"
-            className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-            onClick={() => setMobileOpen((v) => !v)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h14M4 18h16" />
-            </svg>
-          </button>
-          <div className="text-sm font-semibold">TGCF Web UI</div>
-          <div className="w-8" />
-        </header>
-      )}
-
-      {/* Sidebar visible only when authenticated */}
-      {isAuthenticated && (
-        <Sidebar
-          activePage={activePage}
-          setActivePage={(p) => {
-            setActivePage(p);
-            setMobileOpen(false);
-          }}
-          theme={theme}
-          setTheme={setTheme}
-          collapsed={collapsed}
-          onToggleCollapsed={() => setCollapsed((v) => !v)}
-          mobileOpen={mobileOpen}
-          onCloseMobile={() => setMobileOpen(false)}
-        />
-      )}
-
-      <main className={`relative flex-1 overflow-y-auto ${isAuthenticated ? 'pt-16 md:pt-12' : 'pt-0'} ${isAuthenticated ? sidebarWidth : ''} px-4 sm:px-6 md:px-8`}>
-        {!isAuthenticated ? (
-          renderPublicPage()
-        ) : (
-          <>
-            <div className="mb-4 flex items-center justify-end">
-              <button
-                onClick={logout}
-                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-              >
-                Logout
-              </button>
-            </div>
+      {isAuthenticated ? (
+        <div className="flex h-screen">
+          <Header
+            onToggleMobileSidebar={() => setMobileOpen(true)}
+            onLogout={logout}
+            theme={theme}
+            setTheme={setTheme}
+          />
+          <Sidebar
+            activePage={activePage}
+            setActivePage={(p) => {
+              setActivePage(p);
+              setMobileOpen(false);
+            }}
+            theme={theme}
+            setTheme={setTheme}
+            collapsed={collapsed}
+            onToggleCollapsed={() => setCollapsed((v) => !v)}
+            mobileOpen={mobileOpen}
+            onCloseMobile={() => setMobileOpen(false)}
+          />
+          <main className={`relative w-full flex-1 overflow-y-auto pt-20 ${sidebarWidth} px-4 sm:px-6 md:px-8`}>
             {renderProtectedPage()}
-          </>
-        )}
-      </main>
+          </main>
+        </div>
+      ) : (
+        <>
+          <header className="sticky top-1 z-20 border-b border-slate-200 bg-white/80 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/70">
+            <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold">T</span>
+                <span className="text-sm font-semibold">TGCF Web UI</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <ThemeToggle theme={theme} setTheme={setTheme} />
+                <button
+                  onClick={() => setPublicRoute('login')}
+                  className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                >
+                  Login
+                </button>
+              </div>
+            </div>
+          </header>
+          <main className="relative flex-1 overflow-y-auto px-4 sm:px-6 md:px-8">
+            {renderPublicContent()}
+          </main>
+        </>
+      )}
     </div>
   );
 };
