@@ -18,7 +18,7 @@ interface SidebarProps {
 
 const NavLinks: React.FC<{ collapsed: boolean; onLinkClick?: () => void }> = ({ collapsed, onLinkClick }) => {
   return (
-    <nav className={`flex-1 space-y-1 px-2 py-4 ${collapsed ? 'overflow-hidden' : ''}`}>
+    <nav className="flex-1 space-y-1 px-2 py-4">
       {NAV_ITEMS.map((item) => {
         const path = `/${item.name.toLowerCase().replace(/ /g, '-')}`;
         return (
