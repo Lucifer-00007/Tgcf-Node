@@ -86,6 +86,11 @@ const App: React.FC = () => {
   };
 
   const renderPublicContent = () => {
+    const exploreDemo = () => {
+      setIsAuthenticated(true);
+      setActivePage(Page.Hello);
+    };
+
     switch (publicRoute) {
       case 'login':
         return <Login onSuccess={login} onGoRegister={() => setPublicRoute('register')} />;
@@ -93,19 +98,7 @@ const App: React.FC = () => {
         return <Register onSuccess={login} onGoLogin={() => setPublicRoute('login')} />;
       case 'landing':
       default:
-        return (
-          <>
-            <Landing />
-            <div className="mx-auto my-10 flex max-w-6xl justify-center gap-3">
-              <button
-                onClick={() => { setIsAuthenticated(true); setActivePage(Page.Hello); }}
-                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-              >
-                Explore demo
-              </button>
-            </div>
-          </>
-        );
+        return <Landing onExplore={exploreDemo} />;
     }
   };
 
