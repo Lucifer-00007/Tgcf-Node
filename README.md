@@ -14,7 +14,7 @@ A web interface for managing `tgcf`, the ultimate tool to automate custom Telegr
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18 or newer recommended)
-- [pnpm](https://pnpm.io/installation) (recommended), [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), or [yarn](https://classic.yarnpkg.com/en/docs/install)
+- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ## Installation
 
@@ -24,9 +24,9 @@ A web interface for managing `tgcf`, the ultimate tool to automate custom Telegr
     cd tgcf-web-ui
     ```
 
-2.  Install dependencies. We recommend using `pnpm`:
+2.  Install dependencies:
     ```bash
-    pnpm install
+    npm install
     ```
 
 ## Environment Variables
@@ -47,13 +47,13 @@ The application code can then access the key using `import.meta.env.VITE_API_KEY
 
 In the project directory, you can run:
 
--   `pnpm dev`: Runs the app in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in the browser. The page will reload if you make edits.
+-   `npm run dev`: Runs the app in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in the browser. The page will reload if you make edits.
 
--   `pnpm build`: Builds the app for production to the `dist` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
+-   `npm run build`: Builds the app for production to the `dist` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
 
--   `pnpm lint`: Lints the project files for code quality and style issues.
+-   `npm run lint`: Lints the project files for code quality and style issues.
 
--   `pnpm preview`: Serves the production build from the `dist` folder locally to preview it before deployment.
+-   `npm run preview`: Serves the production build from the `dist` folder locally to preview it before deployment.
 
 ## Codebase Structure
 
@@ -85,4 +85,4 @@ The project is structured to be scalable and maintainable:
 
 ## Deployment
 
-To deploy the application, run `pnpm build` and upload the contents of the generated `dist` folder to your static hosting provider (e.g., Vercel, Netlify, GitHub Pages).
+To deploy the application, run `npm run build` and upload the contents of the generated `dist` folder to your static hosting provider (e.g., Vercel, Netlify, GitHub Pages).
