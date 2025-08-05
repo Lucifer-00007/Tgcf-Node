@@ -8,6 +8,8 @@ const Advanced: React.FC = () => {
     const [enforceSeq, setEnforceSeq] = useState(false);
     const [deleteTrigger, setDeleteTrigger] = useState('.deleteMe');
     const [customizeBot, setCustomizeBot] = useState(false);
+    const [startCommandReply, setStartCommandReply] = useState('Hi! I am alive');
+    const [helpCommandReply, setHelpCommandReply] = useState('For details visit github.com/aahnik/tgcf');
 
     return (
         <div className="mx-auto max-w-3xl">
@@ -71,6 +73,37 @@ Platform Linux 6.8.0-1019-aws
                             onChange={setCustomizeBot}
                             className="mb-4"
                         />
+                        {customizeBot && (
+                            <div className="mt-2 space-y-4 rounded-md border border-slate-200 p-4 dark:border-gray-700">
+                                <Alert type="info">
+                                    Note: For userbots, the commands start with <code>.</code> instead of <code>/</code>, like <code>.start</code> and not <code>/start</code>.
+                                </Alert>
+                                <div>
+                                    <label htmlFor="start-reply" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Bot's Reply to /start command
+                                    </label>
+                                    <textarea
+                                        id="start-reply"
+                                        rows={3}
+                                        value={startCommandReply}
+                                        onChange={(e) => setStartCommandReply(e.target.value)}
+                                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="help-reply" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Bot's Reply to /help command
+                                    </label>
+                                    <textarea
+                                        id="help-reply"
+                                        rows={3}
+                                        value={helpCommandReply}
+                                        onChange={(e) => setHelpCommandReply(e.target.value)}
+                                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </CollapsibleSection>
                     
                     <button
