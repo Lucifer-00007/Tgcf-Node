@@ -49,7 +49,7 @@ const ActionCard: React.FC<{ to: string; icon: React.ElementType; title: string;
     </Link>
 );
 
-const Hello: React.FC = () => {
+const Dashboard: React.FC = () => {
   return (
     <div className="mx-auto max-w-4xl">
       {/* Welcome Banner */}
@@ -110,4 +110,4 @@ const Hello: React.FC = () => {
   );
 };
 
-export default Hello;
+export default Dashboard;

@@ -52,7 +52,7 @@ const SlidersIcon: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 export const NAV_ITEMS = [
-  { name: Page.Hello, icon: HandWaveIcon },
+  { name: Page.Dashboard, icon: HandWaveIcon },
   { name: Page.Profile, icon: UserIcon },
   { name: Page.Credentials, icon: KeyIcon },
   { name: Page.Admins, icon: ShieldCheckIcon },

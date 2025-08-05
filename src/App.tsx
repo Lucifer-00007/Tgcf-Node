@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Link, Navigate } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Page } from './types';
-import Hello from './pages/Hello';
+import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Credentials from './pages/Credentials';
 import Admins from './pages/Admins';
@@ -65,7 +65,7 @@ const App: React.FC = () => {
   const login = () => {
     setIsAuthenticated(true);
     localStorage.setItem('auth', '1');
-    navigate('/hello');
+    navigate('/dashboard');
   };
 
   const logout = () => {
@@ -100,7 +100,7 @@ const App: React.FC = () => {
               <Menu className="h-6 w-6" />
             </button>
             <Routes>
-              <Route path="/hello" element={<Hello />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/credentials" element={<Credentials />} />
               <Route path="/admins" element={<Admins />} />
@@ -108,7 +108,7 @@ const App: React.FC = () => {
               <Route path="/plugins" element={<Plugins />} />
               <Route path="/run" element={<Run />} />
               <Route path="/advanced" element={<Advanced />} />
-              <Route path="*" element={<Navigate to="/hello" />} />
+              <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
           </main>
         </div>
