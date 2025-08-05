@@ -4,6 +4,8 @@ import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
 import { AlertTriangle, Copy, Download, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { JsonViewer } from '@textea/json-viewer';
+import { Theme } from '../App';
 
 const versionInfo = `Running tgcf 1.1.0 (main, Oct  2 2023, 21:59:40) [GCC 8.3.0]
 Python 3.11.6 (main, Oct  2 2023, 21:59:40)
@@ -11,7 +13,7 @@ OS posix
 Platform Linux 6.8.0-1019-aws
 ('64bit', 'ELF')`;
 
-const configJson = `{
+const configJsonString = `{
   "show_forwarded_from": false,
   "live_mode": true,
   "past_mode": false,
@@ -20,13 +22,23 @@ const configJson = `{
     {
       "source": -100123456789,
       "dest": [
-        -100987654321
+        -100987654321,
+        -100111222333
       ],
       "offset": 0,
-      "end": 0
+      "end": 0,
+      "plugins": {
+        "filter": {
+          "blacklist": ["#ignore", "test"],
+          "whitelist": []
+        }
+      }
     }
-  ]
+  ],
+  "admins": ["user1", "user2"]
 }`;
+
+const parsedConfig = JSON.parse(configJsonString);
 
 const CodeBlock: React.FC<{ title: string; children: React.ReactNode; onCopy?: () => void }> = ({ title, children, onCopy }) => (
     <div className="rounded-lg border border-slate-200 bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -52,6 +64,7 @@ const Advanced: React.FC = () => {
     const [customizeBot, setCustomizeBot] = useState(false);
     const [startCommandReply, setStartCommandReply] = useState('Hi! I am alive');
     const [helpCommandReply, setHelpCommandReply] = useState('For details visit github.com/aahnik/tgcf');
+    const [theme] = useState<Theme>(() => (localStorage.getItem('theme') as Theme) || 'light');
 
     const handleCopy = (text: string, name: string) => {
         navigator.clipboard.writeText(text);
@@ -86,9 +99,25 @@ const Advanced: React.FC = () => {
                             <CodeBlock title="Version & Platform" onCopy={() => handleCopy(versionInfo, 'Version Info')}>
                                 {versionInfo}
                             </CodeBlock>
-                            <CodeBlock title="Current Configuration" onCopy={() => handleCopy(configJson, 'Configuration')}>
-                                {configJson}
-                            </CodeBlock>
+                            
+                            <div className="rounded-lg border border-slate-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+                                <div className="flex items-center justify-between border-b border-slate-200 px-4 py-2 dark:border-gray-700">
+                                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Current Configuration</p>
+                                    <button onClick={() => handleCopy(configJsonString, 'Configuration')} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" title="Copy to clipboard">
+                                        <Copy className="h-4 w-4" />
+                                    </button>
+                                </div>
+                                <div className="bg-slate-50 p-4 text-sm dark:bg-gray-900/50">
+                                    <JsonViewer 
+                                        value={parsedConfig}
+                                        theme={theme}
+                                        rootName={false}
+                                        displayDataTypes={false}
+                                        style={{ background: 'transparent' }}
+                                    />
+                                </div>
+                            </div>
+
                             <div className="flex justify-end">
                                 <button className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
                                     <Download className="h-4 w-4" />
