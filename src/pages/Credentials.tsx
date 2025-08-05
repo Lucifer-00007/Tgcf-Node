@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
+import { Alert } from '../components/Alert';
+import { KeyRound, Bot, User } from 'lucide-react';
 
 const EyeIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
@@ -60,111 +62,133 @@ const Credentials: React.FC = () => {
     return (
         <div className="mx-auto max-w-2xl">
             <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Telegram Credentials</h1>
-            <div className="rounded-lg border border-slate-200 bg-white p-8 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                <PasswordInput
-                    id="api-id"
-                    label="API ID"
-                    value={apiId}
-                    onChange={(e) => setApiId(e.target.value)}
-                />
-                <PasswordInput
-                    id="api-hash"
-                    label="API HASH"
-                    value={apiHash}
-                    onChange={(e) => setApiHash(e.target.value)}
-                />
-                
-                <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                    You can get api id and api hash from <a href="https://my.telegram.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://my.telegram.org</a>.
-                </p>
 
-                <div className="mb-6">
-                    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Choose account type</label>
-                    <div className="flex items-center space-x-8">
-                        <div className="flex items-center">
-                            <input
-                                id="bot"
-                                name="accountType"
-                                type="radio"
-                                value="bot"
-                                checked={accountType === 'bot'}
-                                onChange={(e) => setAccountType(e.target.value)}
-                                className="h-4 w-4 border-gray-300 bg-gray-100 text-red-600 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700"
-                            />
-                            <label htmlFor="bot" className="ml-3 block text-sm text-gray-900 dark:text-gray-200">
-                                Bot
-                            </label>
-                        </div>
-                        <div className="flex items-center">
-                            <input
-                                id="user"
-                                name="accountType"
-                                type="radio"
-                                value="user"
-                                checked={accountType === 'user'}
-                                onChange={(e) => setAccountType(e.target.value)}
-                                className="h-4 w-4 border-gray-300 bg-gray-100 text-red-600 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700"
-                            />
-                            <label htmlFor="user" className="ml-3 block text-sm text-gray-900 dark:text-gray-200">
-                                User
-                            </label>
+            <Alert type="warning" icon={<KeyRound className="h-5 w-5" />}>
+                Your credentials are sensitive. Never share your API keys or session string with anyone.
+            </Alert>
+
+            <div className="mt-6 space-y-4">
+                <CollapsibleSection title="Step 1: Telegram API Credentials" defaultOpen={true}>
+                    <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                        First, you need your personal API keys from Telegram. You can get these from{' '}
+                        <a href="https://my.telegram.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">my.telegram.org</a>.
+                    </p>
+                    <PasswordInput
+                        id="api-id"
+                        label="API ID"
+                        value={apiId}
+                        onChange={(e) => setApiId(e.target.value)}
+                        placeholder="Enter your API ID"
+                    />
+                    <PasswordInput
+                        id="api-hash"
+                        label="API Hash"
+                        value={apiHash}
+                        onChange={(e) => setApiHash(e.target.value)}
+                        placeholder="Enter your API Hash"
+                    />
+                </CollapsibleSection>
+
+                <CollapsibleSection title="Step 2: Account Type & Token" defaultOpen={true}>
+                    <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                        Choose whether you want to operate tgcf using a bot or a user account.
+                    </p>
+                    
+                    <div className="mb-6">
+                        <div className="flex items-center space-x-8">
+                            <div className="flex items-center">
+                                <input
+                                    id="bot"
+                                    name="accountType"
+                                    type="radio"
+                                    value="bot"
+                                    checked={accountType === 'bot'}
+                                    onChange={(e) => setAccountType(e.target.value)}
+                                    className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                                />
+                                <label htmlFor="bot" className="ml-3 flex items-center gap-2 text-sm text-gray-900 dark:text-gray-200">
+                                    <Bot className="h-5 w-5" />
+                                    <span>Bot Account</span>
+                                </label>
+                            </div>
+                            <div className="flex items-center">
+                                <input
+                                    id="user"
+                                    name="accountType"
+                                    type="radio"
+                                    value="user"
+                                    checked={accountType === 'user'}
+                                    onChange={(e) => setAccountType(e.target.value)}
+                                    className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                                />
+                                <label htmlFor="user" className="ml-3 flex items-center gap-2 text-sm text-gray-900 dark:text-gray-200">
+                                    <User className="h-5 w-5" />
+                                    <span>User Account</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {accountType === 'bot' && (
-                    <PasswordInput
-                        id="bot-token"
-                        label="Enter bot token"
-                        value={botToken}
-                        onChange={(e) => setBotToken(e.target.value)}
-                    />
-                )}
+                    {accountType === 'bot' && (
+                        <div>
+                            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                                Get your bot token from <a href="https://t.me/BotFather" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">@BotFather</a> on Telegram.
+                            </p>
+                            <PasswordInput
+                                id="bot-token"
+                                label="Bot Token"
+                                value={botToken}
+                                onChange={(e) => setBotToken(e.target.value)}
+                                placeholder="Enter your bot token"
+                            />
+                        </div>
+                    )}
 
-                {accountType === 'user' && (
-                    <>
-                        <PasswordInput
-                            id="session-string"
-                            label="Enter session string"
-                            value={sessionString}
-                            onChange={(e) => setSessionString(e.target.value)}
-                        />
-                        <div className="-mt-2">
-                            <CollapsibleSection title="How to get session string ?">
-                                <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400">
-                                    <p>
-                                        Link to repl: <a href="https://replit.com/@aahnik/tg-login?v=1" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://replit.com/@aahnik/tg-login?v=1</a>
-                                    </p>
-                                    <p>
-                                        Click on the above link and enter api id, api hash, and phone no to generate session string.
-                                    </p>
-                                    <div>
-                                        <p className="font-semibold text-gray-700 dark:text-gray-300">Note from developer:</p>
-                                        <p className="mt-1">
-                                            Due some issues logging in with a user account using a phone no is not supported in this web interface.
+                    {accountType === 'user' && (
+                        <div>
+                            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                                User accounts require a session string for authentication to avoid repeated logins.
+                            </p>
+                            <PasswordInput
+                                id="session-string"
+                                label="Session String"
+                                value={sessionString}
+                                onChange={(e) => setSessionString(e.target.value)}
+                                placeholder="Enter your session string"
+                            />
+                            <div className="mt-4">
+                                <CollapsibleSection title="How to get a session string?">
+                                    <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                                        <p>
+                                            You can securely generate a session string using this Replit project: <a href="https://replit.com/@aahnik/tg-login?v=1" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">tg-login on Replit</a>.
                                         </p>
-                                        <p className="mt-2">
-                                            I have built a command-line program named tg-login (<a href="https://github.com/aahnik/tg-login" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://github.com/aahnik/tg-login</a>) that can generate the session string for you.
+                                        <p>
+                                            Click the link, run the project, and enter your API ID, API hash, and phone number when prompted.
                                         </p>
-                                        <p className="mt-2">
-                                            You can run tg-login on your computer, or securely in this repl. tg-login is open source, and you can also inspect the bash script running in the repl.
+                                        <div>
+                                            <p className="font-semibold text-gray-700 dark:text-gray-300">Why is this needed?</p>
+                                            <p className="mt-1">
+                                                Direct phone login is not supported in this web interface for security reasons. The `tg-login` script (<a href="https://github.com/aahnik/tg-login" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">view on GitHub</a>) generates a session string, which is a secure way to authenticate without exposing your phone number or password here.
+                                            </p>
+                                        </div>
+                                        <p>
+                                            Learn more about session strings in the <a href="https://docs.telethon.dev/en/stable/concepts/sessions.html#string-sessions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">Telethon documentation</a>.
                                         </p>
                                     </div>
-                                    <p>
-                                        What is a session string ? <a href="https://docs.telethon.dev/en/stable/concepts/sessions.html#string-sessions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">https://docs.telethon.dev/en/stable/concepts/sessions.html#string-sessions</a>
-                                    </p>
-                                </div>
-                            </CollapsibleSection>
+                                </CollapsibleSection>
+                            </div>
                         </div>
-                    </>
-                )}
+                    )}
+                </CollapsibleSection>
 
-                <button
-                    type="button"
-                    className="mt-6 w-auto rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
-                >
-                    Save
-                </button>
+                <div className="flex justify-end">
+                    <button
+                        type="button"
+                        className="mt-2 w-auto rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
+                    >
+                        Save Credentials
+                    </button>
+                </div>
             </div>
         </div>
     );
