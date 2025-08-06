@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
-import { Plug, UserPlus, Trash2, Plus, UploadCloud } from 'lucide-react';
+import { Plug, UserPlus, Trash2, Plus, UploadCloud, Save, RotateCcw } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const fileOptions = ['audio', 'document', 'photo', 'video', 'voice', 'sticker', 'animation', 'contact'];
 
@@ -94,7 +95,7 @@ const Plugins: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-3xl pb-24">
       <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Plugins</h1>
 
       <Alert type="info" icon={<Plug className="h-5 w-5" />}>
@@ -103,7 +104,7 @@ const Plugins: React.FC = () => {
       </Alert>
 
       <div className="mt-6 space-y-4">
-        <CollapsibleSection title="Filter" defaultOpen={true}>
+        <CollapsibleSection title="Filter" defaultOpen={true} statusIndicator={filterEnabled ? 'enabled' : 'disabled'}>
           <Checkbox
             id="filter-enabled"
             label="Use this plugin: filter"
@@ -360,7 +361,7 @@ const Plugins: React.FC = () => {
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection title="Format" defaultOpen={false}>
+        <CollapsibleSection title="Format" defaultOpen={false} statusIndicator={formatEnabled ? 'enabled' : 'disabled'}>
           <Checkbox id="format-enabled" label="Use this plugin: format" checked={formatEnabled} onChange={setFormatEnabled} className="mb-4" />
           <div className={!formatEnabled ? 'opacity-50 pointer-events-none' : ''}>
             <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
@@ -383,7 +384,7 @@ const Plugins: React.FC = () => {
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection title="Watermark" defaultOpen={false}>
+        <CollapsibleSection title="Watermark" defaultOpen={false} statusIndicator={watermarkEnabled ? 'enabled' : 'disabled'}>
           <Checkbox
             id="watermark-enabled"
             label="Apply watermark to media (images and videos)."
@@ -413,7 +414,7 @@ const Plugins: React.FC = () => {
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection title="OCR" defaultOpen={false}>
+        <CollapsibleSection title="OCR" defaultOpen={false} statusIndicator={ocrEnabled ? 'enabled' : 'disabled'}>
           <Checkbox
             id="ocr-enabled"
             label="Use this plugin: ocr"
@@ -438,7 +439,7 @@ const Plugins: React.FC = () => {
           </p>
         </CollapsibleSection>
 
-        <CollapsibleSection title="Replace" defaultOpen={false}>
+        <CollapsibleSection title="Replace" defaultOpen={false} statusIndicator={replaceEnabled ? 'enabled' : 'disabled'}>
           <div className="space-y-4">
             <Checkbox
               id="replace-enabled"
@@ -500,7 +501,7 @@ const Plugins: React.FC = () => {
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection title="Caption" defaultOpen={false}>
+        <CollapsibleSection title="Caption" defaultOpen={false} statusIndicator={captionEnabled ? 'enabled' : 'disabled'}>
           <Checkbox
             id="caption-enabled"
             label="Use this plugin: caption"
@@ -523,14 +524,28 @@ const Plugins: React.FC = () => {
             and header/footer, use a blank line in your text.
           </p>
         </CollapsibleSection>
-
-        <button
-          type="button"
-          className="w-auto rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
-        >
-          Save
-        </button>
       </div>
+
+      <div className="fixed bottom-0 left-0 right-0 z-10 border-t border-slate-200 bg-white/80 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/80">
+        <div className="mx-auto flex max-w-3xl items-center justify-end gap-4 px-4 py-3">
+            <button
+                type="button"
+                onClick={() => toast.error('Resetting changes is not yet implemented.')}
+                className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
+            >
+                <RotateCcw className="h-4 w-4" />
+                <span>Discard</span>
+            </button>
+            <button
+                type="button"
+                onClick={() => toast.success('Plugin settings saved!')}
+                className="flex items-center gap-2 rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            >
+                <Save className="h-4 w-4" />
+                <span>Save Changes</span>
+            </button>
+        </div>
+    </div>
     </div>
   );
 };

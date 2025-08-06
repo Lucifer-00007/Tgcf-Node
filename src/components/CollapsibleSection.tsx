@@ -4,6 +4,7 @@ interface CollapsibleSectionProps {
   title: string;
   children: ReactNode;
   defaultOpen?: boolean;
+  statusIndicator?: 'enabled' | 'disabled' | 'none';
 }
 
 const ChevronUpIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -19,8 +20,14 @@ const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 
-export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ title, children, defaultOpen = true }) => {
+export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ title, children, defaultOpen = true, statusIndicator = 'none' }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  const statusDotClass = {
+    enabled: 'bg-green-500',
+    disabled: 'bg-gray-400',
+    none: 'hidden',
+  };
 
   return (
     <div className="mb-4 rounded-lg border border-slate-200 bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -29,7 +36,10 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ title, c
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
       >
-        <span>{title}</span>
+        <div className="flex items-center gap-3">
+          <span className={`h-2.5 w-2.5 rounded-full ${statusDotClass[statusIndicator]}`}></span>
+          <span>{title}</span>
+        </div>
         {isOpen ? <ChevronUpIcon className="h-5 w-5" /> : <ChevronDownIcon className="h-5 w-5" />}
       </button>
       {isOpen && (
