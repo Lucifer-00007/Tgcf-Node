@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
-import { Plug } from 'lucide-react';
+import { Plug, UserPlus, Trash2 } from 'lucide-react';
 
 const fileOptions = ['audio', 'document', 'photo', 'video', 'voice', 'sticker', 'animation', 'contact'];
 
@@ -21,10 +21,37 @@ const Plugins: React.FC = () => {
   const [filterUseRegex, setFilterUseRegex] = useState(false);
   const [textWhitelist, setTextWhitelist] = useState('');
   const [textBlacklist, setTextBlacklist] = useState('');
-  const [usersWhitelist, setUsersWhitelist] = useState('');
-  const [usersBlacklist, setUsersBlacklist] = useState('');
+  
+  const [usersWhitelist, setUsersWhitelist] = useState<string[]>([]);
+  const [newWhitelistedUser, setNewWhitelistedUser] = useState('');
+  
+  const [usersBlacklist, setUsersBlacklist] = useState<string[]>([]);
+  const [newBlacklistedUser, setNewBlacklistedUser] = useState('');
+
   const [filesWhitelist, setFilesWhitelist] = useState('');
   const [filesBlacklist, setFilesBlacklist] = useState('');
+
+  const handleAddWhitelistedUser = () => {
+    if (newWhitelistedUser && !usersWhitelist.includes(newWhitelistedUser)) {
+        setUsersWhitelist([...usersWhitelist, newWhitelistedUser]);
+        setNewWhitelistedUser('');
+    }
+  };
+
+  const handleRemoveWhitelistedUser = (userToRemove: string) => {
+      setUsersWhitelist(usersWhitelist.filter(user => user !== userToRemove));
+  };
+
+  const handleAddBlacklistedUser = () => {
+    if (newBlacklistedUser && !usersBlacklist.includes(newBlacklistedUser)) {
+        setUsersBlacklist([...usersBlacklist, newBlacklistedUser]);
+        setNewBlacklistedUser('');
+    }
+  };
+
+  const handleRemoveBlacklistedUser = (userToRemove: string) => {
+      setUsersBlacklist(usersBlacklist.filter(user => user !== userToRemove));
+  };
 
   const getTabClass = (tabName: string) => {
     return activeFilterTab === tabName
@@ -125,37 +152,81 @@ const Plugins: React.FC = () => {
                 </div>
               )}
               {activeFilterTab === 'users' && (
-                <div className="space-y-4">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Enter one username/id per line.</p>
-                  <div>
-                    <label
-                      htmlFor="users-whitelist"
-                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Users Whitelist
-                    </label>
-                    <textarea
-                      id="users-whitelist"
-                      rows={3}
-                      value={usersWhitelist}
-                      onChange={(e) => setUsersWhitelist(e.target.value)}
-                      className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                    />
+                <div className="space-y-6">
+                  {/* Users Whitelist */}
+                  <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div className="p-6">
+                      <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Users Whitelist</h3>
+                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Only allow messages from these users.</p>
+                      <div className="mt-4 flex gap-2">
+                        <input
+                          type="text"
+                          value={newWhitelistedUser}
+                          onChange={(e) => setNewWhitelistedUser(e.target.value)}
+                          className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                          placeholder="Enter username or ID"
+                          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddWhitelistedUser(); } }}
+                        />
+                        <button onClick={handleAddWhitelistedUser} className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                          <UserPlus className="h-4 w-4" />
+                          <span>Add</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="border-t border-slate-200 dark:border-gray-700">
+                      <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                        {usersWhitelist.length > 0 ? (
+                          usersWhitelist.map((user, index) => (
+                            <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                              <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{user}</span>
+                              <button onClick={() => handleRemoveWhitelistedUser(user)} className="text-gray-400 hover:text-red-500 dark:hover:text-red-400" title={`Remove ${user}`}>
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </li>
+                          ))
+                        ) : (
+                          <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No whitelisted users.</li>
+                        )}
+                      </ul>
+                    </div>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="users-blacklist"
-                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Users Blacklist
-                    </label>
-                    <textarea
-                      id="users-blacklist"
-                      rows={3}
-                      value={usersBlacklist}
-                      onChange={(e) => setUsersBlacklist(e.target.value)}
-                      className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                    />
+
+                  {/* Users Blacklist */}
+                  <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div className="p-6">
+                      <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Users Blacklist</h3>
+                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Block messages from these users.</p>
+                      <div className="mt-4 flex gap-2">
+                        <input
+                          type="text"
+                          value={newBlacklistedUser}
+                          onChange={(e) => setNewBlacklistedUser(e.target.value)}
+                          className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                          placeholder="Enter username or ID"
+                          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBlacklistedUser(); } }}
+                        />
+                        <button onClick={handleAddBlacklistedUser} className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                          <UserPlus className="h-4 w-4" />
+                          <span>Add</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="border-t border-slate-200 dark:border-gray-700">
+                      <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                        {usersBlacklist.length > 0 ? (
+                          usersBlacklist.map((user, index) => (
+                            <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                              <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{user}</span>
+                              <button onClick={() => handleRemoveBlacklistedUser(user)} className="text-gray-400 hover:text-red-500 dark:hover:text-red-400" title={`Remove ${user}`}>
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </li>
+                          ))
+                        ) : (
+                          <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No blacklisted users.</li>
+                        )}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               )}
