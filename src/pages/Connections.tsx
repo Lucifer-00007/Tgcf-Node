@@ -6,13 +6,14 @@ import { Connection } from '../types';
 import { PlusCircle, Trash2, Save, Link as LinkIcon } from 'lucide-react';
 
 const initialConnections: Connection[] = [
-    { id: 1, name: 'Main Forward', enabled: true, source: '-1001392052324', destinations: '-1001134939864\n-1001134939865', offset: '0', end: '0' },
-    { id: 2, name: 'Backup Channel', enabled: false, source: '-1001392052324', destinations: '-1001134939866', offset: '0', end: '0' },
+    { id: 1, name: 'Main Forward', enabled: true, source: '-1001392052324', destinations: ['-1001134939864', '-1001134939865'], offset: '0', end: '0' },
+    { id: 2, name: 'Backup Channel', enabled: false, source: '-1001392052324', destinations: ['-1001134939866'], offset: '0', end: '0' },
 ];
 
 const Connections: React.FC = () => {
     const [connections, setConnections] = useState<Connection[]>(initialConnections);
     const [activeTab, setActiveTab] = useState(0);
+    const [newDestination, setNewDestination] = useState('');
 
     const activeConnection = connections[activeTab];
 
@@ -22,6 +23,21 @@ const Connections: React.FC = () => {
         setConnections(newConnections);
     };
 
+    const handleAddDestination = () => {
+        if (newDestination && activeConnection && !activeConnection.destinations.includes(newDestination)) {
+            const updatedDests = [...activeConnection.destinations, newDestination];
+            handleUpdate('destinations', updatedDests);
+            setNewDestination('');
+        }
+    };
+
+    const handleRemoveDestination = (destToRemove: string) => {
+        if (activeConnection) {
+            const updatedDests = activeConnection.destinations.filter(d => d !== destToRemove);
+            handleUpdate('destinations', updatedDests);
+        }
+    };
+
     const addNewConnection = () => {
         const newId = connections.length > 0 ? Math.max(...connections.map(c => c.id)) + 1 : 1;
         const newConnection: Connection = {
@@ -29,7 +45,7 @@ const Connections: React.FC = () => {
             name: `Connection ${newId}`,
             enabled: true,
             source: '',
-            destinations: '',
+            destinations: [],
             offset: '0',
             end: '0',
         };
@@ -118,15 +134,51 @@ const Connections: React.FC = () => {
                             />
                         </div>
                         <div className="mt-4">
-                            <label htmlFor="destinations" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-400">Destinations</label>
-                            <textarea 
-                                id="destinations" 
-                                rows={4} 
-                                value={activeConnection.destinations}
-                                onChange={(e) => handleUpdate('destinations', e.target.value)}
-                                placeholder="Enter destination IDs, one per line."
-                                className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                            ></textarea>
+                            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-400">Destinations</label>
+                            <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                                <div className="p-6">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Add destination IDs one by one.</p>
+                                    <div className="mt-4 flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={newDestination}
+                                            onChange={(e) => setNewDestination(e.target.value)}
+                                            className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                            placeholder="Enter new destination ID"
+                                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddDestination(); } }}
+                                        />
+                                        <button
+                                            onClick={handleAddDestination}
+                                            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                                        >
+                                            <PlusCircle className="h-4 w-4" />
+                                            <span>Add</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="border-t border-slate-200 dark:border-gray-700">
+                                    <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                                        {activeConnection.destinations.length > 0 ? (
+                                            activeConnection.destinations.map((dest, index) => (
+                                                <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                                    <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{dest}</span>
+                                                    <button 
+                                                        onClick={() => handleRemoveDestination(dest)}
+                                                        className="text-gray-400 hover:text-red-500 dark:hover:text-red-400"
+                                                        title={`Remove ${dest}`}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                                                No destinations configured.
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </CollapsibleSection>
 
