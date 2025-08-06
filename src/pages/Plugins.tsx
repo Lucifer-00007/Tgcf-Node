@@ -94,6 +94,9 @@ const Plugins: React.FC = () => {
       : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:text-gray-200';
   };
 
+  const disabledWrap = (enabled: boolean) =>
+    !enabled ? 'opacity-50 pointer-events-none select-none' : '';
+
   return (
     <div className="mx-auto max-w-3xl pb-24">
       <h1 className="mb-6 text-2xl font-semibold dark:text-gray-200">Plugins</h1>
@@ -113,250 +116,299 @@ const Plugins: React.FC = () => {
             description="Blacklist or whitelist certain text items."
             className="mb-4"
           />
-          <div>
-            <div className="border-b border-gray-200 dark:border-gray-700">
-              <nav className="-mb-px flex space-x-6" aria-label="Tabs">
-                <button
-                  onClick={() => setActiveFilterTab('text')}
-                  className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('text')}`}
-                >
-                  Text
-                </button>
-                <button
-                  onClick={() => setActiveFilterTab('users')}
-                  className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('users')}`}
-                >
-                  Users
-                </button>
-                <button
-                  onClick={() => setActiveFilterTab('files')}
-                  className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('files')}`}
-                >
-                  Files
-                </button>
-              </nav>
-            </div>
+          <div className={disabledWrap(filterEnabled)}>
+            <div>
+              <div className="border-b border-gray-200 dark:border-gray-700">
+                <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+                  <button
+                    onClick={() => setActiveFilterTab('text')}
+                    className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('text')}`}
+                    disabled={!filterEnabled}
+                  >
+                    Text
+                  </button>
+                  <button
+                    onClick={() => setActiveFilterTab('users')}
+                    className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('users')}`}
+                    disabled={!filterEnabled}
+                  >
+                    Users
+                  </button>
+                  <button
+                    onClick={() => setActiveFilterTab('files')}
+                    className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('files')}`}
+                    disabled={!filterEnabled}
+                  >
+                    Files
+                  </button>
+                </nav>
+              </div>
 
-            <div className="mt-5">
-              {activeFilterTab === 'text' && (
-                <div className="space-y-6">
-                    <div className="space-y-4">
-                        <Checkbox
-                            id="case-sensitive"
-                            label="Case Sensitive"
-                            checked={filterCaseSensitive}
-                            onChange={setFilterCaseSensitive}
-                        />
-                        <Checkbox
-                            id="use-regex"
-                            label="Interpret filters as regex"
-                            checked={filterUseRegex}
-                            onChange={setFilterUseRegex}
-                        />
-                    </div>
+              <div className="mt-5">
+                {activeFilterTab === 'text' && (
+                  <div className="space-y-6">
+                      <div className="space-y-4">
+                          <Checkbox
+                              id="case-sensitive"
+                              label="Case Sensitive"
+                              checked={filterCaseSensitive}
+                              onChange={setFilterCaseSensitive}
+                              className=""
+                          />
+                          <Checkbox
+                              id="use-regex"
+                              label="Interpret filters as regex"
+                              checked={filterUseRegex}
+                              onChange={setFilterUseRegex}
+                              className=""
+                          />
+                      </div>
 
-                    {/* Text Whitelist */}
+                      {/* Text Whitelist */}
+                      <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                          <div className="p-6">
+                              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Text Whitelist</h3>
+                              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Only allow messages containing these expressions.</p>
+                              <div className="mt-4 flex gap-2">
+                                  <input
+                                      type="text"
+                                      value={newWhitelistedText}
+                                      onChange={(e) => setNewWhitelistedText(e.target.value)}
+                                      className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                      placeholder="Enter text expression"
+                                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddWhitelistedText(); } }}
+                                      disabled={!filterEnabled}
+                                  />
+                                  <button
+                                    onClick={handleAddWhitelistedText}
+                                    className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                                    disabled={!filterEnabled}
+                                  >
+                                      <Plus className="h-4 w-4" />
+                                      <span>Add</span>
+                                  </button>
+                              </div>
+                          </div>
+                          <div className="border-t border-slate-200 dark:border-gray-700">
+                              <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                                  {textWhitelist.length > 0 ? (
+                                      textWhitelist.map((text, index) => (
+                                          <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                              <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{text}</span>
+                                              <button
+                                                onClick={() => handleRemoveWhitelistedText(text)}
+                                                className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 disabled:opacity-60"
+                                                title={`Remove ${text}`}
+                                                disabled={!filterEnabled}
+                                              >
+                                                  <Trash2 className="h-4 w-4" />
+                                              </button>
+                                          </li>
+                                      ))
+                                  ) : (
+                                      <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No whitelisted text.</li>
+                                  )}
+                              </ul>
+                          </div>
+                      </div>
+
+                      {/* Text Blacklist */}
+                      <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                          <div className="p-6">
+                              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Text Blacklist</h3>
+                              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Block messages containing these expressions.</p>
+                              <div className="mt-4 flex gap-2">
+                                  <input
+                                      type="text"
+                                      value={newBlacklistedText}
+                                      onChange={(e) => setNewBlacklistedText(e.target.value)}
+                                      className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                      placeholder="Enter text expression"
+                                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBlacklistedText(); } }}
+                                      disabled={!filterEnabled}
+                                  />
+                                  <button
+                                    onClick={handleAddBlacklistedText}
+                                    className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                                    disabled={!filterEnabled}
+                                  >
+                                      <Plus className="h-4 w-4" />
+                                      <span>Add</span>
+                                  </button>
+                              </div>
+                          </div>
+                          <div className="border-t border-slate-200 dark:border-gray-700">
+                              <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                                  {textBlacklist.length > 0 ? (
+                                      textBlacklist.map((text, index) => (
+                                          <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                              <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{text}</span>
+                                              <button
+                                                onClick={() => handleRemoveBlacklistedText(text)}
+                                                className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 disabled:opacity-60"
+                                                title={`Remove ${text}`}
+                                                disabled={!filterEnabled}
+                                              >
+                                                  <Trash2 className="h-4 w-4" />
+                                              </button>
+                                          </li>
+                                      ))
+                                  ) : (
+                                      <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No blacklisted text.</li>
+                                  )}
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+                )}
+                {activeFilterTab === 'users' && (
+                  <div className="space-y-6">
+                    {/* Users Whitelist */}
                     <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                        <div className="p-6">
-                            <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Text Whitelist</h3>
-                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Only allow messages containing these expressions.</p>
-                            <div className="mt-4 flex gap-2">
-                                <input
-                                    type="text"
-                                    value={newWhitelistedText}
-                                    onChange={(e) => setNewWhitelistedText(e.target.value)}
-                                    className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                                    placeholder="Enter text expression"
-                                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddWhitelistedText(); } }}
-                                />
-                                <button onClick={handleAddWhitelistedText} className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                                    <Plus className="h-4 w-4" />
-                                    <span>Add</span>
+                      <div className="p-6">
+                        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Users Whitelist</h3>
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Only allow messages from these users.</p>
+                        <div className="mt-4 flex gap-2">
+                          <input
+                            type="text"
+                            value={newWhitelistedUser}
+                            onChange={(e) => setNewWhitelistedUser(e.target.value)}
+                            className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                            placeholder="Enter username or ID"
+                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddWhitelistedUser(); } }}
+                            disabled={!filterEnabled}
+                          />
+                          <button
+                            onClick={handleAddWhitelistedUser}
+                            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                            disabled={!filterEnabled}
+                          >
+                            <UserPlus className="h-4 w-4" />
+                            <span>Add</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="border-t border-slate-200 dark:border-gray-700">
+                        <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                          {usersWhitelist.length > 0 ? (
+                            usersWhitelist.map((user, index) => (
+                              <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{user}</span>
+                                <button
+                                  onClick={() => handleRemoveWhitelistedUser(user)}
+                                  className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 disabled:opacity-60"
+                                  title={`Remove ${user}`}
+                                  disabled={!filterEnabled}
+                                >
+                                  <Trash2 className="h-4 w-4" />
                                 </button>
-                            </div>
-                        </div>
-                        <div className="border-t border-slate-200 dark:border-gray-700">
-                            <ul className="divide-y divide-slate-200 dark:divide-gray-700">
-                                {textWhitelist.length > 0 ? (
-                                    textWhitelist.map((text, index) => (
-                                        <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
-                                            <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{text}</span>
-                                            <button onClick={() => handleRemoveWhitelistedText(text)} className="text-gray-400 hover:text-red-500 dark:hover:text-red-400" title={`Remove ${text}`}>
-                                                <Trash2 className="h-4 w-4" />
-                                            </button>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No whitelisted text.</li>
-                                )}
-                            </ul>
-                        </div>
-                    </div>
-
-                    {/* Text Blacklist */}
-                    <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                        <div className="p-6">
-                            <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Text Blacklist</h3>
-                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Block messages containing these expressions.</p>
-                            <div className="mt-4 flex gap-2">
-                                <input
-                                    type="text"
-                                    value={newBlacklistedText}
-                                    onChange={(e) => setNewBlacklistedText(e.target.value)}
-                                    className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                                    placeholder="Enter text expression"
-                                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBlacklistedText(); } }}
-                                />
-                                <button onClick={handleAddBlacklistedText} className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                                    <Plus className="h-4 w-4" />
-                                    <span>Add</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="border-t border-slate-200 dark:border-gray-700">
-                            <ul className="divide-y divide-slate-200 dark:divide-gray-700">
-                                {textBlacklist.length > 0 ? (
-                                    textBlacklist.map((text, index) => (
-                                        <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
-                                            <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{text}</span>
-                                            <button onClick={() => handleRemoveBlacklistedText(text)} className="text-gray-400 hover:text-red-500 dark:hover:text-red-400" title={`Remove ${text}`}>
-                                                <Trash2 className="h-4 w-4" />
-                                            </button>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No blacklisted text.</li>
-                                )}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-              )}
-              {activeFilterTab === 'users' && (
-                <div className="space-y-6">
-                  {/* Users Whitelist */}
-                  <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    <div className="p-6">
-                      <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Users Whitelist</h3>
-                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Only allow messages from these users.</p>
-                      <div className="mt-4 flex gap-2">
-                        <input
-                          type="text"
-                          value={newWhitelistedUser}
-                          onChange={(e) => setNewWhitelistedUser(e.target.value)}
-                          className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                          placeholder="Enter username or ID"
-                          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddWhitelistedUser(); } }}
-                        />
-                        <button onClick={handleAddWhitelistedUser} className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                          <UserPlus className="h-4 w-4" />
-                          <span>Add</span>
-                        </button>
+                              </li>
+                            ))
+                          ) : (
+                            <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No whitelisted users.</li>
+                          )}
+                        </ul>
                       </div>
                     </div>
-                    <div className="border-t border-slate-200 dark:border-gray-700">
-                      <ul className="divide-y divide-slate-200 dark:divide-gray-700">
-                        {usersWhitelist.length > 0 ? (
-                          usersWhitelist.map((user, index) => (
-                            <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
-                              <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{user}</span>
-                              <button onClick={() => handleRemoveWhitelistedUser(user)} className="text-gray-400 hover:text-red-500 dark:hover:text-red-400" title={`Remove ${user}`}>
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            </li>
-                          ))
-                        ) : (
-                          <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No whitelisted users.</li>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
 
-                  {/* Users Blacklist */}
-                  <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    <div className="p-6">
-                      <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Users Blacklist</h3>
-                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Block messages from these users.</p>
-                      <div className="mt-4 flex gap-2">
-                        <input
-                          type="text"
-                          value={newBlacklistedUser}
-                          onChange={(e) => setNewBlacklistedUser(e.target.value)}
-                          className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                          placeholder="Enter username or ID"
-                          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBlacklistedUser(); } }}
-                        />
-                        <button onClick={handleAddBlacklistedUser} className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                          <UserPlus className="h-4 w-4" />
-                          <span>Add</span>
-                        </button>
+                    {/* Users Blacklist */}
+                    <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                      <div className="p-6">
+                        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Users Blacklist</h3>
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Block messages from these users.</p>
+                        <div className="mt-4 flex gap-2">
+                          <input
+                            type="text"
+                            value={newBlacklistedUser}
+                            onChange={(e) => setNewBlacklistedUser(e.target.value)}
+                            className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                            placeholder="Enter username or ID"
+                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBlacklistedUser(); } }}
+                            disabled={!filterEnabled}
+                          />
+                          <button
+                            onClick={handleAddBlacklistedUser}
+                            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                            disabled={!filterEnabled}
+                          >
+                            <UserPlus className="h-4 w-4" />
+                            <span>Add</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="border-t border-slate-200 dark:border-gray-700">
+                        <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                          {usersBlacklist.length > 0 ? (
+                            usersBlacklist.map((user, index) => (
+                              <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{user}</span>
+                                <button
+                                  onClick={() => handleRemoveBlacklistedUser(user)}
+                                  className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 disabled:opacity-60"
+                                  title={`Remove ${user}`}
+                                  disabled={!filterEnabled}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              </li>
+                            ))
+                          ) : (
+                            <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No blacklisted users.</li>
+                          )}
+                        </ul>
                       </div>
                     </div>
-                    <div className="border-t border-slate-200 dark:border-gray-700">
-                      <ul className="divide-y divide-slate-200 dark:divide-gray-700">
-                        {usersBlacklist.length > 0 ? (
-                          usersBlacklist.map((user, index) => (
-                            <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
-                              <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{user}</span>
-                              <button onClick={() => handleRemoveBlacklistedUser(user)} className="text-gray-400 hover:text-red-500 dark:hover:text-red-400" title={`Remove ${user}`}>
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            </li>
-                          ))
-                        ) : (
-                          <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No blacklisted users.</li>
-                        )}
-                      </ul>
+                  </div>
+                )}
+                {activeFilterTab === 'files' && (
+                  <div className="space-y-4">
+                    <div>
+                      <label
+                        htmlFor="files-whitelist"
+                        className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                      >
+                        Files Whitelist
+                      </label>
+                      <select
+                        id="files-whitelist"
+                        value={filesWhitelist}
+                        onChange={(e) => setFilesWhitelist(e.target.value)}
+                        className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                        disabled={!filterEnabled}
+                      >
+                        <option value="">Choose an option</option>
+                        {fileOptions.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="files-blacklist"
+                        className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                      >
+                        Files Blacklist
+                      </label>
+                      <select
+                        id="files-blacklist"
+                        value={filesBlacklist}
+                        onChange={(e) => setFilesBlacklist(e.target.value)}
+                        className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                        disabled={!filterEnabled}
+                      >
+                        <option value="">Choose an option</option>
+                        {fileOptions.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
-                </div>
-              )}
-              {activeFilterTab === 'files' && (
-                <div className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="files-whitelist"
-                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Files Whitelist
-                    </label>
-                    <select
-                      id="files-whitelist"
-                      value={filesWhitelist}
-                      onChange={(e) => setFilesWhitelist(e.target.value)}
-                      className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                    >
-                      <option value="">Choose an option</option>
-                      {fileOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="files-blacklist"
-                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Files Blacklist
-                    </label>
-                    <select
-                      id="files-blacklist"
-                      value={filesBlacklist}
-                      onChange={(e) => setFilesBlacklist(e.target.value)}
-                      className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                    >
-                      <option value="">Choose an option</option>
-                      {fileOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </CollapsibleSection>
@@ -396,9 +448,9 @@ const Plugins: React.FC = () => {
             <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Upload watermark image(png)
             </label>
-            <div className="relative flex items-center w-full p-6 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <div className="relative flex w-full items-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6 dark:border-gray-600 dark:bg-gray-700">
                 <div className="flex items-center gap-4">
-                    <UploadCloud className="w-10 h-10 flex-shrink-0 text-gray-400" />
+                    <UploadCloud className="h-10 w-10 flex-shrink-0 text-gray-400" />
                     <div className="text-left">
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                             <span className="font-semibold">Drag and drop file here</span>
@@ -409,7 +461,7 @@ const Plugins: React.FC = () => {
                 <button type="button" className="absolute right-6 top-1/2 -translate-y-1/2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
                     Browse files
                 </button>
-                <input id="watermark-upload" type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" disabled={!watermarkEnabled} />
+                <input id="watermark-upload" type="file" className="absolute inset-0 h-full w-full cursor-pointer opacity-0" disabled={!watermarkEnabled} />
             </div>
           </div>
         </CollapsibleSection>
@@ -423,20 +475,22 @@ const Plugins: React.FC = () => {
             description="Extract text from images."
             className="mb-4"
           />
-          <div className="my-2 rounded-md bg-yellow-50 p-2 text-sm text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
-            <span className="font-bold">CAUTION:</span> With ocr, Make sure to install tesseract to your machine for
-            this plugin.
+          <div className={disabledWrap(ocrEnabled)}>
+            <div className="my-2 rounded-md bg-yellow-50 p-2 text-sm text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+              <span className="font-bold">CAUTION:</span> With ocr, Make sure to install tesseract to your machine for
+              this plugin.
+            </div>
+            <Checkbox
+              id="ocr-delete"
+              label="Delete the image after extracting text"
+              checked={false}
+              onChange={() => {}}
+              className="mb-4"
+            />
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              The text will be added in description of image while forwarding.
+            </p>
           </div>
-          <Checkbox
-            id="ocr-delete"
-            label="Delete the image after extracting text"
-            checked={false}
-            onChange={() => {}}
-            className="mb-4"
-          />
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            The text will be added in description of image while forwarding.
-          </p>
         </CollapsibleSection>
 
         <CollapsibleSection title="Replace" defaultOpen={false} statusIndicator={replaceEnabled ? 'enabled' : 'disabled'}>
@@ -447,57 +501,60 @@ const Plugins: React.FC = () => {
               checked={replaceEnabled}
               onChange={setReplaceEnabled}
             />
-            <Checkbox
-              id="replace-use-regex"
-              label="Interpret as regex"
-              checked={replaceUseRegex}
-              onChange={setReplaceUseRegex}
-            />
-            
-            <div>
-              <label htmlFor="replacements" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Replacements
-              </label>
-              <textarea
-                id="replacements"
-                rows={4}
-                value={replacementsText}
-                onChange={(e) => setReplacementsText(e.target.value)}
-                className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                placeholder="'original': 'new'"
+            <div className={disabledWrap(replaceEnabled)}>
+              <Checkbox
+                id="replace-use-regex"
+                label="Interpret as regex"
+                checked={replaceUseRegex}
+                onChange={setReplaceUseRegex}
               />
-            </div>
-
-            <Checkbox
-              id="show-replace-usage"
-              label="Show rules and usage"
-              checked={showReplaceUsage}
-              onChange={setShowReplaceUsage}
-            />
-
-            {showReplaceUsage && (
-              <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-                <p>Replace one word or expression with another.</p>
-                <ul className="list-inside list-disc space-y-2 pl-2">
-                  <li>Write every replacement in a new line.</li>
-                  <li>
-                    The original text then a <strong className="text-gray-800 dark:text-gray-200">colon</strong> <code className="rounded bg-gray-200 px-1.5 py-1 text-xs dark:bg-gray-600">:</code> and then a <strong className="text-gray-800 dark:text-gray-200">space</strong> and then the new text.
-                  </li>
-                  <li>
-                    Its recommended to use <strong className="text-gray-800 dark:text-gray-200">single quotes</strong>. Quotes are must when your string contain spaces or special characters.
-                  </li>
-                  <li>
-                    Double quotes wont work if your regex has the character: <code className="rounded bg-gray-200 px-1.5 py-1 text-xs dark:bg-gray-600">\</code>.
-                  </li>
-                </ul>
-                <pre className="overflow-x-auto rounded-md bg-slate-100 p-3 text-sm text-gray-700 dark:bg-gray-900/50 dark:text-gray-300">
-                  <code>'orginal': 'new'</code>
-                </pre>
-                <p>
-                  View <a href="#" className="text-blue-600 hover:underline dark:text-blue-400">docs</a> for advanced usage.
-                </p>
+              
+              <div>
+                <label htmlFor="replacements" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Replacements
+                </label>
+                <textarea
+                  id="replacements"
+                  rows={4}
+                  value={replacementsText}
+                  onChange={(e) => setReplacementsText(e.target.value)}
+                  className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                  placeholder="'original': 'new'"
+                  disabled={!replaceEnabled}
+                />
               </div>
-            )}
+
+              <Checkbox
+                id="show-replace-usage"
+                label="Show rules and usage"
+                checked={showReplaceUsage}
+                onChange={setShowReplaceUsage}
+              />
+
+              {showReplaceUsage && (
+                <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                  <p>Replace one word or expression with another.</p>
+                  <ul className="list-inside list-disc space-y-2 pl-2">
+                    <li>Write every replacement in a new line.</li>
+                    <li>
+                      The original text then a <strong className="text-gray-800 dark:text-gray-200">colon</strong> <code className="rounded bg-gray-200 px-1.5 py-1 text-xs dark:bg-gray-600">:</code> and then a <strong className="text-gray-800 dark:text-gray-200">space</strong> and then the new text.
+                    </li>
+                    <li>
+                      Its recommended to use <strong className="text-gray-800 dark:text-gray-200">single quotes</strong>. Quotes are must when your string contain spaces or special characters.
+                    </li>
+                    <li>
+                      Double quotes wont work if your regex has the character: <code className="rounded bg-gray-200 px-1.5 py-1 text-xs dark:bg-gray-600">\</code>.
+                    </li>
+                  </ul>
+                  <pre className="overflow-x-auto rounded-md bg-slate-100 p-3 text-sm text-gray-700 dark:bg-gray-900/50 dark:text-gray-300">
+                    <code>'orginal': 'new'</code>
+                  </pre>
+                  <p>
+                    View <a href="#" className="text-blue-600 hover:underline dark:text-blue-400">docs</a> for advanced usage.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </CollapsibleSection>
 
@@ -509,20 +566,24 @@ const Plugins: React.FC = () => {
             onChange={setCaptionEnabled}
             className="mb-4"
           />
-          <label className="mb-1 mt-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Header</label>
-          <textarea
-            rows={2}
-            className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-          ></textarea>
-          <label className="mb-1 mt-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Footer</label>
-          <textarea
-            rows={2}
-            className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-          ></textarea>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            You can add a common header and/or footer to the messages. To make space between the original message text
-            and header/footer, use a blank line in your text.
-          </p>
+          <div className={disabledWrap(captionEnabled)}>
+            <label className="mb-1 mt-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Header</label>
+            <textarea
+              rows={2}
+              className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+              disabled={!captionEnabled}
+            ></textarea>
+            <label className="mb-1 mt-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Footer</label>
+            <textarea
+              rows={2}
+              className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+              disabled={!captionEnabled}
+            ></textarea>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              You can add a common header and/or footer to the messages. To make space between the original message text
+              and header/footer, use a blank line in your text.
+            </p>
+          </div>
         </CollapsibleSection>
       </div>
 
