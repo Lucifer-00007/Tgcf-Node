@@ -36,6 +36,11 @@ const Plugins: React.FC = () => {
   const [filesWhitelist, setFilesWhitelist] = useState('');
   const [filesBlacklist, setFilesBlacklist] = useState('');
 
+  // State for Replace plugin
+  const [replaceUseRegex, setReplaceUseRegex] = useState(false);
+  const [showReplaceUsage, setShowReplaceUsage] = useState(true);
+  const [replacementsText, setReplacementsText] = useState('');
+
   const formatOptions = ['preserve', 'bold', 'italics', 'code', 'strike', 'plain'];
 
   const handleAddWhitelistedText = () => {
@@ -434,25 +439,65 @@ const Plugins: React.FC = () => {
         </CollapsibleSection>
 
         <CollapsibleSection title="Replace" defaultOpen={false}>
-          <Checkbox
-            id="replace-enabled"
-            label="Use this plugin: replace"
-            checked={replaceEnabled}
-            onChange={setReplaceEnabled}
-            description="The text to be replaced (supports regex)."
-            className="mb-4"
-          />
-          <textarea
-            rows={2}
-            className="mt-2 w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-            placeholder="original replacement"
-          ></textarea>
-          <label className="mb-1 mt-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Replacement</label>
-          <textarea
-            rows={2}
-            className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-            placeholder="new replacement"
-          ></textarea>
+          <div className="space-y-4">
+            <Checkbox
+              id="replace-enabled"
+              label="Apply text replacement"
+              checked={replaceEnabled}
+              onChange={setReplaceEnabled}
+            />
+            <Checkbox
+              id="replace-use-regex"
+              label="Interpret as regex"
+              checked={replaceUseRegex}
+              onChange={setReplaceUseRegex}
+            />
+            
+            <div>
+              <label htmlFor="replacements" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Replacements
+              </label>
+              <textarea
+                id="replacements"
+                rows={4}
+                value={replacementsText}
+                onChange={(e) => setReplacementsText(e.target.value)}
+                className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                placeholder="'original': 'new'"
+              />
+            </div>
+
+            <Checkbox
+              id="show-replace-usage"
+              label="Show rules and usage"
+              checked={showReplaceUsage}
+              onChange={setShowReplaceUsage}
+            />
+
+            {showReplaceUsage && (
+              <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                <p>Replace one word or expression with another.</p>
+                <ul className="list-inside list-disc space-y-2 pl-2">
+                  <li>Write every replacement in a new line.</li>
+                  <li>
+                    The original text then a <strong className="text-gray-800 dark:text-gray-200">colon</strong> <code className="rounded bg-gray-200 px-1.5 py-1 text-xs dark:bg-gray-600">:</code> and then a <strong className="text-gray-800 dark:text-gray-200">space</strong> and then the new text.
+                  </li>
+                  <li>
+                    Its recommended to use <strong className="text-gray-800 dark:text-gray-200">single quotes</strong>. Quotes are must when your string contain spaces or special characters.
+                  </li>
+                  <li>
+                    Double quotes wont work if your regex has the character: <code className="rounded bg-gray-200 px-1.5 py-1 text-xs dark:bg-gray-600">\</code>.
+                  </li>
+                </ul>
+                <pre className="overflow-x-auto rounded-md bg-slate-100 p-3 text-sm text-gray-700 dark:bg-gray-900/50 dark:text-gray-300">
+                  <code>'orginal': 'new'</code>
+                </pre>
+                <p>
+                  View <a href="#" className="text-blue-600 hover:underline dark:text-blue-400">docs</a> for advanced usage.
+                </p>
+              </div>
+            )}
+          </div>
         </CollapsibleSection>
 
         <CollapsibleSection title="Caption" defaultOpen={false}>
