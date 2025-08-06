@@ -14,7 +14,11 @@ const Plugins: React.FC = () => {
   const [formatStyle, setFormatStyle] = useState('preserve');
   const [watermarkEnabled, setWatermarkEnabled] = useState(false);
   const [ocrEnabled, setOcrEnabled] = useState(false);
+
+  // Replace plugin: separate main enable vs internal option
+  const [replaceMainEnabled, setReplaceMainEnabled] = useState(false);
   const [replaceEnabled, setReplaceEnabled] = useState(false);
+
   const [captionEnabled, setCaptionEnabled] = useState(false);
 
   // State for the Filter plugin
@@ -493,20 +497,20 @@ const Plugins: React.FC = () => {
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection title="Replace" defaultOpen={false} statusIndicator={replaceEnabled ? 'enabled' : 'disabled'}>
+        <CollapsibleSection title="Replace" defaultOpen={false} statusIndicator={replaceMainEnabled ? 'enabled' : 'disabled'}>
           <div className="space-y-4">
             <Checkbox
-              id="replace-enabled"
-              label="Apply text replacement"
-              checked={replaceEnabled}
-              onChange={setReplaceEnabled}
+              id="replace-main-enabled"
+              label="Use this plugin: replace"
+              checked={replaceMainEnabled}
+              onChange={setReplaceMainEnabled}
             />
-            <div className={disabledWrap(replaceEnabled)}>
+            <div className={disabledWrap(replaceMainEnabled)}>
               <Checkbox
-                id="replace-use-regex"
-                label="Interpret as regex"
-                checked={replaceUseRegex}
-                onChange={setReplaceUseRegex}
+                id="replace-enabled"
+                label="Apply text replacement"
+                checked={replaceEnabled}
+                onChange={setReplaceEnabled}
               />
               
               <div>
@@ -520,9 +524,16 @@ const Plugins: React.FC = () => {
                   onChange={(e) => setReplacementsText(e.target.value)}
                   className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
                   placeholder="'original': 'new'"
-                  disabled={!replaceEnabled}
+                  disabled={!replaceMainEnabled}
                 />
               </div>
+
+              <Checkbox
+                id="replace-use-regex"
+                label="Interpret as regex"
+                checked={replaceUseRegex}
+                onChange={setReplaceUseRegex}
+              />
 
               <Checkbox
                 id="show-replace-usage"
@@ -543,7 +554,7 @@ const Plugins: React.FC = () => {
                       Its recommended to use <strong className="text-gray-800 dark:text-gray-200">single quotes</strong>. Quotes are must when your string contain spaces or special characters.
                     </li>
                     <li>
-                      Double quotes wont work if your regex has the character: <code className="rounded bg-gray-200 px-1.5 py-1 text-xs dark:bg-gray-600">\</code>.
+                      Double quotes wont work if your regex has the character: <code className="rounded bg-gray-2 00 px-1.5 py-1 text-xs dark:bg-gray-600">\</code>.
                     </li>
                   </ul>
                   <pre className="overflow-x-auto rounded-md bg-slate-100 p-3 text-sm text-gray-700 dark:bg-gray-900/50 dark:text-gray-300">
