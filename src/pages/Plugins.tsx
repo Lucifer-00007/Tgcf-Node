@@ -428,6 +428,9 @@ const Plugins: React.FC = () => {
             onChange={() => {}}
             className="mb-4"
           />
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            The text will be added in description of image while forwarding.
+          </p>
         </CollapsibleSection>
 
         <CollapsibleSection title="Replace" defaultOpen={false}>
