@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
-import { Plug, UserPlus, Trash2 } from 'lucide-react';
+import { Plug, UserPlus, Trash2, Plus } from 'lucide-react';
 
 const fileOptions = ['audio', 'document', 'photo', 'video', 'voice', 'sticker', 'animation', 'contact'];
 
@@ -161,7 +161,7 @@ const Plugins: React.FC = () => {
                                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddWhitelistedText(); } }}
                                 />
                                 <button onClick={handleAddWhitelistedText} className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                                    <UserPlus className="h-4 w-4" />
+                                    <Plus className="h-4 w-4" />
                                     <span>Add</span>
                                 </button>
                             </div>
@@ -199,7 +199,7 @@ const Plugins: React.FC = () => {
                                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBlacklistedText(); } }}
                                 />
                                 <button onClick={handleAddBlacklistedText} className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                                    <UserPlus className="h-4 w-4" />
+                                    <Plus className="h-4 w-4" />
                                     <span>Add</span>
                                 </button>
                             </div>
