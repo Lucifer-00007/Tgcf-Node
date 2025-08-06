@@ -104,7 +104,7 @@ const Plugins: React.FC = () => {
       </Alert>
 
       <div className="mt-6 space-y-4">
-        <CollapsibleSection title="Filter" defaultOpen={true} statusIndicator={filterEnabled ? 'enabled' : 'disabled'}>
+        <CollapsibleSection title="Filter" defaultOpen={false} statusIndicator={filterEnabled ? 'enabled' : 'disabled'}>
           <Checkbox
             id="filter-enabled"
             label="Use this plugin: filter"
