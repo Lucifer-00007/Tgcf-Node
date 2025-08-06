@@ -51,164 +51,162 @@ const Plugins: React.FC = () => {
             description="Blacklist or whitelist certain text items."
             className="mb-4"
           />
-          {filterEnabled && (
-            <div>
-              <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-6" aria-label="Tabs">
-                  <button
-                    onClick={() => setActiveFilterTab('text')}
-                    className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('text')}`}
-                  >
-                    Text
-                  </button>
-                  <button
-                    onClick={() => setActiveFilterTab('users')}
-                    className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('users')}`}
-                  >
-                    Users
-                  </button>
-                  <button
-                    onClick={() => setActiveFilterTab('files')}
-                    className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('files')}`}
-                  >
-                    Files
-                  </button>
-                </nav>
-              </div>
-
-              <div className="mt-5">
-                {activeFilterTab === 'text' && (
-                  <div className="space-y-4">
-                    <Checkbox
-                      id="case-sensitive"
-                      label="Case Sensitive"
-                      checked={filterCaseSensitive}
-                      onChange={setFilterCaseSensitive}
-                    />
-                    <Checkbox
-                      id="use-regex"
-                      label="Interpret filters as regex"
-                      checked={filterUseRegex}
-                      onChange={setFilterUseRegex}
-                    />
-                    <div>
-                      <label
-                        htmlFor="text-whitelist"
-                        className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                      >
-                        Text Whitelist
-                      </label>
-                      <textarea
-                        id="text-whitelist"
-                        rows={3}
-                        value={textWhitelist}
-                        onChange={(e) => setTextWhitelist(e.target.value)}
-                        placeholder="Enter one text expression per line"
-                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="text-blacklist"
-                        className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                      >
-                        Text Blacklist
-                      </label>
-                      <textarea
-                        id="text-blacklist"
-                        rows={3}
-                        value={textBlacklist}
-                        onChange={(e) => setTextBlacklist(e.target.value)}
-                        placeholder="Enter one text expression per line"
-                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                      />
-                    </div>
-                  </div>
-                )}
-                {activeFilterTab === 'users' && (
-                  <div className="space-y-4">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Enter one username/id per line.</p>
-                    <div>
-                      <label
-                        htmlFor="users-whitelist"
-                        className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                      >
-                        Users Whitelist
-                      </label>
-                      <textarea
-                        id="users-whitelist"
-                        rows={3}
-                        value={usersWhitelist}
-                        onChange={(e) => setUsersWhitelist(e.target.value)}
-                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="users-blacklist"
-                        className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                      >
-                        Users Blacklist
-                      </label>
-                      <textarea
-                        id="users-blacklist"
-                        rows={3}
-                        value={usersBlacklist}
-                        onChange={(e) => setUsersBlacklist(e.target.value)}
-                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                      />
-                    </div>
-                  </div>
-                )}
-                {activeFilterTab === 'files' && (
-                  <div className="space-y-4">
-                    <div>
-                      <label
-                        htmlFor="files-whitelist"
-                        className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                      >
-                        Files Whitelist
-                      </label>
-                      <select
-                        id="files-whitelist"
-                        value={filesWhitelist}
-                        onChange={(e) => setFilesWhitelist(e.target.value)}
-                        className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                      >
-                        <option value="">Choose an option</option>
-                        {fileOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="files-blacklist"
-                        className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                      >
-                        Files Blacklist
-                      </label>
-                      <select
-                        id="files-blacklist"
-                        value={filesBlacklist}
-                        onChange={(e) => setFilesBlacklist(e.target.value)}
-                        className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                      >
-                        <option value="">Choose an option</option>
-                        {fileOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
-              </div>
+          <div>
+            <div className="border-b border-gray-200 dark:border-gray-700">
+              <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+                <button
+                  onClick={() => setActiveFilterTab('text')}
+                  className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('text')}`}
+                >
+                  Text
+                </button>
+                <button
+                  onClick={() => setActiveFilterTab('users')}
+                  className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('users')}`}
+                >
+                  Users
+                </button>
+                <button
+                  onClick={() => setActiveFilterTab('files')}
+                  className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-medium ${getTabClass('files')}`}
+                >
+                  Files
+                </button>
+              </nav>
             </div>
-          )}
+
+            <div className="mt-5">
+              {activeFilterTab === 'text' && (
+                <div className="space-y-4">
+                  <Checkbox
+                    id="case-sensitive"
+                    label="Case Sensitive"
+                    checked={filterCaseSensitive}
+                    onChange={setFilterCaseSensitive}
+                  />
+                  <Checkbox
+                    id="use-regex"
+                    label="Interpret filters as regex"
+                    checked={filterUseRegex}
+                    onChange={setFilterUseRegex}
+                  />
+                  <div>
+                    <label
+                      htmlFor="text-whitelist"
+                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Text Whitelist
+                    </label>
+                    <textarea
+                      id="text-whitelist"
+                      rows={3}
+                      value={textWhitelist}
+                      onChange={(e) => setTextWhitelist(e.target.value)}
+                      placeholder="Enter one text expression per line"
+                      className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="text-blacklist"
+                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Text Blacklist
+                    </label>
+                    <textarea
+                      id="text-blacklist"
+                      rows={3}
+                      value={textBlacklist}
+                      onChange={(e) => setTextBlacklist(e.target.value)}
+                      placeholder="Enter one text expression per line"
+                      className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                    />
+                  </div>
+                </div>
+              )}
+              {activeFilterTab === 'users' && (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Enter one username/id per line.</p>
+                  <div>
+                    <label
+                      htmlFor="users-whitelist"
+                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Users Whitelist
+                    </label>
+                    <textarea
+                      id="users-whitelist"
+                      rows={3}
+                      value={usersWhitelist}
+                      onChange={(e) => setUsersWhitelist(e.target.value)}
+                      className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="users-blacklist"
+                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Users Blacklist
+                    </label>
+                    <textarea
+                      id="users-blacklist"
+                      rows={3}
+                      value={usersBlacklist}
+                      onChange={(e) => setUsersBlacklist(e.target.value)}
+                      className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                    />
+                  </div>
+                </div>
+              )}
+              {activeFilterTab === 'files' && (
+                <div className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="files-whitelist"
+                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Files Whitelist
+                    </label>
+                    <select
+                      id="files-whitelist"
+                      value={filesWhitelist}
+                      onChange={(e) => setFilesWhitelist(e.target.value)}
+                      className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                    >
+                      <option value="">Choose an option</option>
+                      {fileOptions.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="files-blacklist"
+                      className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Files Blacklist
+                    </label>
+                    <select
+                      id="files-blacklist"
+                      value={filesBlacklist}
+                      onChange={(e) => setFilesBlacklist(e.target.value)}
+                      className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                    >
+                      <option value="">Choose an option</option>
+                      {fileOptions.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </CollapsibleSection>
 
         <CollapsibleSection title="Format" defaultOpen={false}>
