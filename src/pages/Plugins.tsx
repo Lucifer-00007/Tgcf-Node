@@ -390,13 +390,15 @@ const Plugins: React.FC = () => {
             <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Upload watermark image(png)
             </label>
-            <div className="relative flex items-center justify-center w-full p-6 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-                <div className="text-center">
-                    <UploadCloud className="w-10 h-10 mx-auto text-gray-400" />
-                    <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="font-semibold">Drag and drop file here</span>
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Limit 200MB per file • PNG</p>
+            <div className="relative flex items-center w-full p-6 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <div className="flex items-center gap-4">
+                    <UploadCloud className="w-10 h-10 flex-shrink-0 text-gray-400" />
+                    <div className="text-left">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <span className="font-semibold">Drag and drop file here</span>
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Limit 200MB per file • PNG</p>
+                    </div>
                 </div>
                 <button type="button" className="absolute right-6 top-1/2 -translate-y-1/2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
                     Browse files
