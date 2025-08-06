@@ -5,13 +5,11 @@ import { Alert } from '../components/Alert';
 import { Plug, UserPlus, Trash2, Plus } from 'lucide-react';
 
 const fileOptions = ['audio', 'document', 'photo', 'video', 'voice', 'sticker', 'animation', 'contact'];
-const formatOptions = ['preserve', 'bold', 'italics', 'code', 'strike', 'plain'];
 
 const Plugins: React.FC = () => {
   // General plugin states
   const [filterEnabled, setFilterEnabled] = useState(false);
   const [formatEnabled, setFormatEnabled] = useState(false);
-  const [selectedFormat, setSelectedFormat] = useState('preserve');
   const [watermarkEnabled, setWatermarkEnabled] = useState(false);
   const [ocrEnabled, setOcrEnabled] = useState(false);
   const [replaceEnabled, setReplaceEnabled] = useState(false);
@@ -356,30 +354,18 @@ const Plugins: React.FC = () => {
 
         <CollapsibleSection title="Format" defaultOpen={false}>
           <Checkbox id="format-enabled" label="Use this plugin: format" checked={formatEnabled} onChange={setFormatEnabled} className="mb-4" />
-          {formatEnabled && (
-            <div className="space-y-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Add style to text like <span className="font-bold">bold</span>, <span className="italic">italics</span>, <span className="line-through">strikethrough</span>, <code className="rounded bg-slate-200 px-1 py-0.5 text-sm font-mono dark:bg-gray-700">monospace</code> etc.
-              </p>
-              <div>
-                <label htmlFor="format-select" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Format
-                </label>
-                <select
-                  id="format-select"
-                  value={selectedFormat}
-                  onChange={(e) => setSelectedFormat(e.target.value)}
-                  className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                >
-                  {formatOptions.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          )}
+          <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+            Add style to your text message.{' '}
+            <a href="#" className="text-blue-600 dark:text-blue-400">
+              Markdown
+            </a>{' '}
+            v2.
+          </p>
+          <textarea
+            rows={4}
+            className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+            placeholder="template"
+          ></textarea>
         </CollapsibleSection>
 
         <CollapsibleSection title="Watermark" defaultOpen={false}>
