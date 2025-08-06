@@ -3,24 +3,14 @@ import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
 import { Plug, UserPlus, Trash2, Plus, UploadCloud } from 'lucide-react';
-import toast from 'react-hot-toast';
 
 const fileOptions = ['audio', 'document', 'photo', 'video', 'voice', 'sticker', 'animation', 'contact'];
-
-const placeholders = [
-  { name: '{message}', description: 'The original message text.' },
-  { name: '{first_name}', description: 'First name of the sender.' },
-  { name: '{last_name}', description: 'Last name of the sender.' },
-  { name: '{username}', description: 'Username of the sender.' },
-  { name: '{user_id}', description: 'ID of the sender.' },
-  { name: '{chat_title}', description: 'Title of the source chat.' },
-  { name: '{chat_id}', description: 'ID of the source chat.' },
-];
 
 const Plugins: React.FC = () => {
   // General plugin states
   const [filterEnabled, setFilterEnabled] = useState(false);
   const [formatEnabled, setFormatEnabled] = useState(false);
+  const [formatStyle, setFormatStyle] = useState('preserve');
   const [watermarkEnabled, setWatermarkEnabled] = useState(false);
   const [ocrEnabled, setOcrEnabled] = useState(false);
   const [replaceEnabled, setReplaceEnabled] = useState(false);
@@ -45,6 +35,8 @@ const Plugins: React.FC = () => {
 
   const [filesWhitelist, setFilesWhitelist] = useState('');
   const [filesBlacklist, setFilesBlacklist] = useState('');
+
+  const formatOptions = ['preserve', 'bold', 'italics', 'code', 'strike', 'plain'];
 
   const handleAddWhitelistedText = () => {
     if (newWhitelistedText && !textWhitelist.includes(newWhitelistedText)) {
@@ -88,11 +80,6 @@ const Plugins: React.FC = () => {
 
   const handleRemoveBlacklistedUser = (userToRemove: string) => {
       setUsersBlacklist(usersBlacklist.filter(user => user !== userToRemove));
-  };
-
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success(`Copied "${text}" to clipboard!`);
   };
 
   const getTabClass = (tabName: string) => {
@@ -372,35 +359,21 @@ const Plugins: React.FC = () => {
           <Checkbox id="format-enabled" label="Use this plugin: format" checked={formatEnabled} onChange={setFormatEnabled} className="mb-4" />
           <div className={!formatEnabled ? 'opacity-50 pointer-events-none' : ''}>
             <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-              Add style to your text message using{' '}
-              <a href="https://core.telegram.org/bots/api#markdownv2-style" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">
-                MarkdownV2
-              </a> style.
+              Add style to text like <strong className="text-gray-700 dark:text-gray-200">bold</strong>, <em className="text-gray-700 dark:text-gray-200">italics</em>, strikethrough, <code className="rounded bg-green-100 px-1 py-0.5 text-sm text-green-800 dark:bg-green-900/50 dark:text-green-300">monospace</code> etc.
             </p>
-            <textarea
-              rows={4}
-              className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-              placeholder="Example: **New Message from {chat_title}**\n\n{message}"
-              disabled={!formatEnabled}
-            ></textarea>
-            
-            <div className="mt-4">
-              <h4 className="text-md font-semibold text-gray-700 dark:text-gray-300">Placeholders</h4>
-              <p className="mt-1 mb-3 text-sm text-gray-500 dark:text-gray-400">Click on a placeholder to copy it.</p>
-              <div className="space-y-2">
-                {placeholders.map((p) => (
-                  <div key={p.name} className="flex items-center">
-                    <code 
-                      className="cursor-pointer rounded-md bg-slate-200 px-2 py-1 font-mono text-sm text-slate-800 transition-colors hover:bg-slate-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
-                      onClick={() => handleCopy(p.name)}
-                      title={`Click to copy ${p.name}`}
-                    >
-                      {p.name}
-                    </code>
-                    <span className="ml-3 text-sm text-gray-600 dark:text-gray-400">{p.description}</span>
-                  </div>
+            <div>
+              <label htmlFor="format-style" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Format</label>
+              <select
+                id="format-style"
+                value={formatStyle}
+                onChange={(e) => setFormatStyle(e.target.value)}
+                disabled={!formatEnabled}
+                className="w-full rounded-md border-slate-200 bg-slate-100 px-4 py-2 focus:border-blue-500 focus:ring-blue-500 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+              >
+                {formatOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
                 ))}
-              </div>
+              </select>
             </div>
           </div>
         </CollapsibleSection>
