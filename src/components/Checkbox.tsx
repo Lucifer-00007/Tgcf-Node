@@ -7,9 +7,10 @@ interface CheckboxProps {
   onChange: (checked: boolean) => void;
   description?: string;
   className?: string;
+  disabled?: boolean;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ label, id, checked, onChange, description, className }) => {
+export const Checkbox: React.FC<CheckboxProps> = ({ label, id, checked, onChange, description, className, disabled = false }) => {
   return (
     <div className={`flex flex-col ${className}`}>
         <div className="flex items-center">
@@ -18,7 +19,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({ label, id, checked, onChange
                 type="checkbox"
                 checked={checked}
                 onChange={(e) => onChange(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                disabled={disabled}
+                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
             />
             <label htmlFor={id} className="ml-3 block text-sm text-gray-700 dark:text-gray-300">
                 {label}
