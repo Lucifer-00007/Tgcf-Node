@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CollapsibleSection } from '../components/CollapsibleSection';
 import { Checkbox } from '../components/Checkbox';
 import { Alert } from '../components/Alert';
-import { Plug, Save, RotateCcw, Replace as ReplaceIcon, HelpCircle, Code2, Settings2, UploadCloud } from 'lucide-react';
+import { Plug, UserPlus, Trash2, Plus, UploadCloud, Save, RotateCcw, Replace as ReplaceIcon, HelpCircle, Code2, Settings2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const fileOptions = ['audio', 'document', 'photo', 'video', 'voice', 'sticker', 'animation', 'contact'];
@@ -26,11 +26,17 @@ const Plugins: React.FC = () => {
   const [filterCaseSensitive, setFilterCaseSensitive] = useState(false);
   const [filterUseRegex, setFilterUseRegex] = useState(false);
   
-  const [textWhitelist, setTextWhitelist] = useState('');
-  const [textBlacklist, setTextBlacklist] = useState('');
+  const [textWhitelist, setTextWhitelist] = useState<string[]>([]);
+  const [newWhitelistedText, setNewWhitelistedText] = useState('');
+  
+  const [textBlacklist, setTextBlacklist] = useState<string[]>([]);
+  const [newBlacklistedText, setNewBlacklistedText] = useState('');
 
-  const [usersWhitelist, setUsersWhitelist] = useState('');
-  const [usersBlacklist, setUsersBlacklist] = useState('');
+  const [usersWhitelist, setUsersWhitelist] = useState<string[]>([]);
+  const [newWhitelistedUser, setNewWhitelistedUser] = useState('');
+  
+  const [usersBlacklist, setUsersBlacklist] = useState<string[]>([]);
+  const [newBlacklistedUser, setNewBlacklistedUser] = useState('');
 
   const [filesWhitelist, setFilesWhitelist] = useState('');
   const [filesBlacklist, setFilesBlacklist] = useState('');
@@ -39,6 +45,50 @@ const Plugins: React.FC = () => {
   const [replaceUseRegex, setReplaceUseRegex] = useState(false);
   const [showReplaceUsage, setShowReplaceUsage] = useState(true);
   const [replacementsText, setReplacementsText] = useState('');
+
+  const handleAddWhitelistedText = () => {
+    if (newWhitelistedText && !textWhitelist.includes(newWhitelistedText)) {
+        setTextWhitelist([...textWhitelist, newWhitelistedText]);
+        setNewWhitelistedText('');
+    }
+  };
+
+  const handleRemoveWhitelistedText = (textToRemove: string) => {
+      setTextWhitelist(textWhitelist.filter(text => text !== textToRemove));
+  };
+
+  const handleAddBlacklistedText = () => {
+    if (newBlacklistedText && !textBlacklist.includes(newBlacklistedText)) {
+        setTextBlacklist([...textBlacklist, newBlacklistedText]);
+        setNewBlacklistedText('');
+    }
+  };
+
+  const handleRemoveBlacklistedText = (textToRemove: string) => {
+      setTextBlacklist(textBlacklist.filter(text => text !== textToRemove));
+  };
+
+  const handleAddWhitelistedUser = () => {
+    if (newWhitelistedUser && !usersWhitelist.includes(newWhitelistedUser)) {
+        setUsersWhitelist([...usersWhitelist, newWhitelistedUser]);
+        setNewWhitelistedUser('');
+    }
+  };
+
+  const handleRemoveWhitelistedUser = (userToRemove: string) => {
+      setUsersWhitelist(usersWhitelist.filter(user => user !== userToRemove));
+  };
+
+  const handleAddBlacklistedUser = () => {
+    if (newBlacklistedUser && !usersBlacklist.includes(newBlacklistedUser)) {
+        setUsersBlacklist([...usersBlacklist, newBlacklistedUser]);
+        setNewBlacklistedUser('');
+    }
+  };
+
+  const handleRemoveBlacklistedUser = (userToRemove: string) => {
+      setUsersBlacklist(usersBlacklist.filter(user => user !== userToRemove));
+  };
 
   const getTabClass = (tabName: string) => {
     return activeFilterTab === tabName
@@ -59,7 +109,7 @@ const Plugins: React.FC = () => {
       </Alert>
 
       <div className="mt-6 space-y-4">
-        <CollapsibleSection title="Filter" defaultOpen={false} statusIndicator={filterEnabled ? 'enabled' : 'disabled'}>
+        <CollapsibleSection title="Filter" defaultOpen={true} statusIndicator={filterEnabled ? 'enabled' : 'disabled'}>
           <Checkbox
             id="filter-enabled"
             label="Use this plugin: filter"
@@ -98,74 +148,217 @@ const Plugins: React.FC = () => {
 
               <div className="mt-5">
                 {activeFilterTab === 'text' && (
-                  <div className="space-y-4">
-                    <Checkbox
-                      id="case-sensitive"
-                      label="Case Sensitive"
-                      checked={filterCaseSensitive}
-                      onChange={setFilterCaseSensitive}
-                      disabled={!filterEnabled}
-                    />
-                    <Checkbox
-                      id="use-regex"
-                      label="Interpret filters as regex"
-                      checked={filterUseRegex}
-                      onChange={setFilterUseRegex}
-                      disabled={!filterEnabled}
-                    />
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Enter one text expression per line</p>
-                    
-                    <div>
-                      <label htmlFor="text-whitelist" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Text Whitelist</label>
-                      <textarea
-                        id="text-whitelist"
-                        rows={4}
-                        value={textWhitelist}
-                        onChange={(e) => setTextWhitelist(e.target.value)}
-                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                        disabled={!filterEnabled}
-                      />
-                    </div>
+                  <div className="space-y-6">
+                      <div className="space-y-4">
+                          <Checkbox
+                              id="case-sensitive"
+                              label="Case Sensitive"
+                              checked={filterCaseSensitive}
+                              onChange={setFilterCaseSensitive}
+                              disabled={!filterEnabled}
+                          />
+                          <Checkbox
+                              id="use-regex"
+                              label="Interpret filters as regex"
+                              checked={filterUseRegex}
+                              onChange={setFilterUseRegex}
+                              disabled={!filterEnabled}
+                          />
+                      </div>
 
-                    <div>
-                      <label htmlFor="text-blacklist" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Text Blacklist</label>
-                      <textarea
-                        id="text-blacklist"
-                        rows={4}
-                        value={textBlacklist}
-                        onChange={(e) => setTextBlacklist(e.target.value)}
-                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                        disabled={!filterEnabled}
-                      />
-                    </div>
+                      {/* Text Whitelist */}
+                      <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                          <div className="p-6">
+                              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Text Whitelist</h3>
+                              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Only allow messages containing these expressions.</p>
+                              <div className="mt-4 flex gap-2">
+                                  <input
+                                      type="text"
+                                      value={newWhitelistedText}
+                                      onChange={(e) => setNewWhitelistedText(e.target.value)}
+                                      className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                      placeholder="Enter text expression"
+                                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddWhitelistedText(); } }}
+                                      disabled={!filterEnabled}
+                                  />
+                                  <button
+                                    onClick={handleAddWhitelistedText}
+                                    className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                                    disabled={!filterEnabled}
+                                  >
+                                      <Plus className="h-4 w-4" />
+                                      <span>Add</span>
+                                  </button>
+                              </div>
+                          </div>
+                          <div className="border-t border-slate-200 dark:border-gray-700">
+                              <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                                  {textWhitelist.length > 0 ? (
+                                      textWhitelist.map((text, index) => (
+                                          <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                              <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{text}</span>
+                                              <button
+                                                onClick={() => handleRemoveWhitelistedText(text)}
+                                                className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 disabled:opacity-60"
+                                                title={`Remove ${text}`}
+                                                disabled={!filterEnabled}
+                                              >
+                                                  <Trash2 className="h-4 w-4" />
+                                              </button>
+                                          </li>
+                                      ))
+                                  ) : (
+                                      <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No whitelisted text.</li>
+                                  )}
+                              </ul>
+                          </div>
+                      </div>
+
+                      {/* Text Blacklist */}
+                      <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                          <div className="p-6">
+                              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Text Blacklist</h3>
+                              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Block messages containing these expressions.</p>
+                              <div className="mt-4 flex gap-2">
+                                  <input
+                                      type="text"
+                                      value={newBlacklistedText}
+                                      onChange={(e) => setNewBlacklistedText(e.target.value)}
+                                      className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                      placeholder="Enter text expression"
+                                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBlacklistedText(); } }}
+                                      disabled={!filterEnabled}
+                                  />
+                                  <button
+                                    onClick={handleAddBlacklistedText}
+                                    className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                                    disabled={!filterEnabled}
+                                  >
+                                      <Plus className="h-4 w-4" />
+                                      <span>Add</span>
+                                  </button>
+                              </div>
+                          </div>
+                          <div className="border-t border-slate-200 dark:border-gray-700">
+                              <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                                  {textBlacklist.length > 0 ? (
+                                      textBlacklist.map((text, index) => (
+                                          <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                              <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{text}</span>
+                                              <button
+                                                onClick={() => handleRemoveBlacklistedText(text)}
+                                                className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 disabled:opacity-60"
+                                                title={`Remove ${text}`}
+                                                disabled={!filterEnabled}
+                                              >
+                                                  <Trash2 className="h-4 w-4" />
+                                              </button>
+                                          </li>
+                                      ))
+                                  ) : (
+                                      <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No blacklisted text.</li>
+                                  )}
+                              </ul>
+                          </div>
+                      </div>
                   </div>
                 )}
                 {activeFilterTab === 'users' && (
-                  <div className="space-y-4">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Enter one username/id per line</p>
-                    
-                    <div>
-                      <label htmlFor="users-whitelist" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Users Whitelist</label>
-                      <textarea
-                        id="users-whitelist"
-                        rows={4}
-                        value={usersWhitelist}
-                        onChange={(e) => setUsersWhitelist(e.target.value)}
-                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                        disabled={!filterEnabled}
-                      />
+                  <div className="space-y-6">
+                    {/* Users Whitelist */}
+                    <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                      <div className="p-6">
+                        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Users Whitelist</h3>
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Only allow messages from these users.</p>
+                        <div className="mt-4 flex gap-2">
+                          <input
+                            type="text"
+                            value={newWhitelistedUser}
+                            onChange={(e) => setNewWhitelistedUser(e.target.value)}
+                            className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                            placeholder="Enter username or ID"
+                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddWhitelistedUser(); } }}
+                            disabled={!filterEnabled}
+                          />
+                          <button
+                            onClick={handleAddWhitelistedUser}
+                            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                            disabled={!filterEnabled}
+                          >
+                            <Plus className="h-4 w-4" />
+                            <span>Add</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="border-t border-slate-200 dark:border-gray-700">
+                        <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                          {usersWhitelist.length > 0 ? (
+                            usersWhitelist.map((user, index) => (
+                              <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{user}</span>
+                                <button
+                                  onClick={() => handleRemoveWhitelistedUser(user)}
+                                  className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 disabled:opacity-60"
+                                  title={`Remove ${user}`}
+                                  disabled={!filterEnabled}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              </li>
+                            ))
+                          ) : (
+                            <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No whitelisted users.</li>
+                          )}
+                        </ul>
+                      </div>
                     </div>
 
-                    <div>
-                      <label htmlFor="users-blacklist" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Users Blacklist</label>
-                      <textarea
-                        id="users-blacklist"
-                        rows={4}
-                        value={usersBlacklist}
-                        onChange={(e) => setUsersBlacklist(e.target.value)}
-                        className="w-full resize-y rounded-md border-slate-200 bg-slate-100 p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                        disabled={!filterEnabled}
-                      />
+                    {/* Users Blacklist */}
+                    <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                      <div className="p-6">
+                        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Users Blacklist</h3>
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Block messages from these users.</p>
+                        <div className="mt-4 flex gap-2">
+                          <input
+                            type="text"
+                            value={newBlacklistedUser}
+                            onChange={(e) => setNewBlacklistedUser(e.target.value)}
+                            className="flex-grow rounded-md border-slate-200 bg-slate-100 px-4 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                            placeholder="Enter username or ID"
+                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBlacklistedUser(); } }}
+                            disabled={!filterEnabled}
+                          />
+                          <button
+                            onClick={handleAddBlacklistedUser}
+                            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60"
+                            disabled={!filterEnabled}
+                          >
+                            <Plus className="h-4 w-4" />
+                            <span>Add</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="border-t border-slate-200 dark:border-gray-700">
+                        <ul className="divide-y divide-slate-200 dark:divide-gray-700">
+                          {usersBlacklist.length > 0 ? (
+                            usersBlacklist.map((user, index) => (
+                              <li key={index} className="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-gray-700/50">
+                                <span className="font-mono text-sm text-gray-700 dark:text-gray-300">{user}</span>
+                                <button
+                                  onClick={() => handleRemoveBlacklistedUser(user)}
+                                  className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 disabled:opacity-60"
+                                  title={`Remove ${user}`}
+                                  disabled={!filterEnabled}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              </li>
+                            ))
+                          ) : (
+                            <li className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">No blacklisted users.</li>
+                          )}
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 )}
