@@ -91,7 +91,7 @@ const App: React.FC = () => {
             onCloseMobile={() => setMobileOpen(false)}
             onLogout={logout}
           />
-          <main className={`relative w-full flex-1 overflow-y-auto pt-8 ${sidebarWidth} px-4 sm:px-6 md:px-8`}>
+          <main className={`relative w-full flex-1 overflow-y-auto pt-16 md:pt-8 ${sidebarWidth} px-4 sm:px-6 md:px-8`}>
             <button
               aria-label="Open sidebar"
               className="absolute top-4 left-4 z-10 rounded-md p-2 text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 md:hidden"
