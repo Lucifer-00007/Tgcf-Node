@@ -17,17 +17,28 @@ While `tgcf` is a potent tool, managing its configuration through YAML files can
 -   **Dashboard:** A central hub for quick actions and an overview of your setup.
 -   **Secure Credential Management:** Securely input and manage your Telegram API ID, API hash, bot tokens, and session strings.
 -   **Dynamic Connection Setup:** Visually create, edit, and delete forwarding connections between source and destination chats.
--   **Interactive Plugin Configuration:** Easily enable, disable, and configure powerful plugins like Filter, Format, Watermark, OCR, and more with user-friendly controls.
+-   **Interactive Plugin Configuration:** Easily enable, disable, and configure powerful plugins like Filter, Format, Replace, Watermark, OCR, and more with user-friendly controls.
 -   **Process Control & Monitoring:** Start and stop the `tgcf` process and watch its output in a real-time log stream directly in the UI.
 -   **Advanced Settings:** For power users, an advanced section provides access to low-level configuration options and system information.
 -   **Light & Dark Mode:** Toggles between light and dark themes for a comfortable viewing experience.
 
-## Prerequisites
+## Technology Stack
 
-- [Node.js](https://nodejs.org/) (v18 or newer recommended)
-- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+-   **Framework:** React with TypeScript
+-   **Build Tool:** Vite
+-   **Styling:** Tailwind CSS with PostCSS
+-   **Routing:** React Router
+-   **Icons:** Lucide Icons
+-   **UI Components:** A custom-built library of reusable components.
 
-## Installation
+## Getting Started
+
+### Prerequisites
+
+-   [Node.js](https://nodejs.org/) (v18 or newer recommended)
+-   [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+### Installation
 
 1.  Clone the repository:
     ```bash
@@ -40,59 +51,28 @@ While `tgcf` is a potent tool, managing its configuration through YAML files can
     npm install
     ```
 
-## Environment Variables
-
-This application may require an API key for certain features. The key should be made available as an environment variable.
-
-For local development, create a `.env.local` file in the root of the project. **Do not commit this file to version control.**
-
-**.env.local**
-```
-# For Vite, environment variables accessible in the client must be prefixed with VITE_
-VITE_API_KEY="your_api_key_here"
-```
-
-The application code can then access the key using `import.meta.env.VITE_API_KEY`.
-
 ## Available Scripts
 
 In the project directory, you can run:
 
--   `npm run dev`: Runs the app in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in the browser. The page will reload if you make edits.
-
--   `npm run build`: Builds the app for production to the `dist` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
-
+-   `npm run dev`: Runs the app in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+-   `npm run build`: Builds the app for production to the `dist` folder.
 -   `npm run lint`: Lints the project files for code quality and style issues.
+-   `npm run preview`: Serves the production build locally to preview it before deployment.
 
--   `npm run preview`: Serves the production build from the `dist` folder locally to preview it before deployment.
+## Codebase Overview
 
-## Codebase Structure
+The project is structured for scalability and maintainability:
 
-The project is structured to be scalable and maintainable:
+-   `src/components/`: Contains shared, reusable React components used across the application.
+-   `src/pages/`: Contains top-level components that correspond to a specific page or view.
+-   `src/types.ts`: Defines shared TypeScript types and interfaces.
+-   `src/App.tsx`: The main application component, responsible for routing and layout.
+-   `src/index.tsx`: The entry point of the application.
 
-```
-.
-├── dist/                # Production build output
-├── public/              # Static assets (e.g., favicon)
-├── src/
-│   ├── components/      # Shared React components (Button, Alert, etc.)
-│   ├── constants/       # App-wide constants (e.g., navigation items)
-│   ├── pages/           # Page-level components for each view
-│   ├── types/           # TypeScript type definitions
-│   ├── App.tsx          # Main application component and routing logic
-│   ├── index.css        # Main CSS file with Tailwind imports
-│   └── index.tsx        # Application entry point
-├── .env.local           # (Example) Local environment variables (ignored by Git)
-├── .eslintrc.cjs        # ESLint configuration
-├── .gitignore           # Files to be ignored by Git
-├── .prettierrc          # Prettier code formatting rules
-├── BACKEND_PLAN.md      # High-level architecture plan for the backend
-├── index.html           # HTML entry point for Vite
-├── package.json         # Project dependencies and scripts
-├── postcss.config.js    # PostCSS configuration (for Tailwind)
-├── tailwind.config.js   # Tailwind CSS configuration
-└── tsconfig.json        # TypeScript compiler options
-```
+## Backend Integration
+
+This frontend is designed to be powered by a backend service. The high-level architecture and API endpoint definitions for this service are detailed in `BACKEND_PLAN.md`.
 
 ## Deployment
 
