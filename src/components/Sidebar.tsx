@@ -1,164 +1,113 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { NAV_ITEMS } from '../constants';
-import { Theme } from '../App';
+import type { Theme } from '../App';
+import { Home, User, Key, Users, Link2, Plug, Play, Settings, LogOut, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
-import { LogOut, PanelLeftClose } from 'lucide-react';
-import { Tooltip } from './Tooltip';
 
 interface SidebarProps {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  collapsed: boolean;
-  onToggleCollapsed: () => void;
-  mobileOpen: boolean;
-  onCloseMobile: () => void;
-  onLogout: () => void;
+    theme: Theme;
+    setTheme: (theme: Theme) => void;
+    collapsed: boolean;
+    onToggleCollapsed: () => void;
+    mobileOpen: boolean;
+    onCloseMobile: () => void;
+    onLogout: () => void;
 }
 
-const NavLinks: React.FC<{ collapsed: boolean; onLinkClick?: () => void }> = ({ collapsed, onLinkClick }) => {
-  return (
-    <nav className="flex-1 space-y-1 px-2 py-4">
-      {NAV_ITEMS.map((item) => {
-        const path = `/${item.name.toLowerCase().replace(/ /g, '-')}`;
-        return (
-          <Tooltip key={item.name} text={item.name} position="right" disabled={!collapsed}>
-            <NavLink
-              to={path}
-              onClick={onLinkClick}
-              className={({ isActive }) =>
-                `group relative flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
-                  isActive
-                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
-                    : 'text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700'
-                } ${collapsed ? 'justify-center' : ''}`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <span className={`absolute left-0 h-6 w-1 rounded-r-full bg-blue-600 transition-transform ${isActive ? 'scale-y-100' : 'scale-y-0'} group-hover:scale-y-100`}></span>
-                  <item.icon className={`h-5 w-5 flex-shrink-0 ${!collapsed ? 'mr-3' : ''}`} />
-                  {!collapsed && <span className="truncate">{item.name}</span>}
-                </>
-              )}
-            </NavLink>
-          </Tooltip>
-        );
-      })}
-    </nav>
-  );
-};
+const pages = [
+    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'Profile', href: '/profile', icon: User },
+    { name: 'Credentials', href: '/credentials', icon: Key },
+    { name: 'Admins', href: '/admins', icon: Users },
+    { name: 'Connections', href: '/connections', icon: Link2 },
+    { name: 'Plugins', href: '/plugins', icon: Plug },
+    { name: 'Run', href: '/run', icon: Play },
+    { name: 'Advanced', href: '/advanced', icon: Settings },
+];
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  theme,
-  setTheme,
-  collapsed,
-  onToggleCollapsed,
-  mobileOpen,
-  onCloseMobile,
-  onLogout,
+    theme,
+    setTheme,
+    collapsed,
+    onToggleCollapsed,
+    mobileOpen,
+    onCloseMobile,
+    onLogout,
 }) => {
-  return (
-    <>
-      {/* Desktop Sidebar */}
-      <aside
-        className={`fixed left-0 top-0 z-20 hidden h-full border-r border-slate-200 bg-slate-100 text-gray-800 transition-all duration-300 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200 md:flex md:flex-col ${
-          collapsed ? 'w-20' : 'w-64'
-        }`}
-      >
-        <div className={`flex h-16 items-center border-b border-slate-200 px-4 dark:border-slate-700 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-          {!collapsed && (
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <span className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-lg font-bold text-white">T</span>
-              <span className="truncate font-semibold">TGCF Web UI</span>
-            </Link>
-          )}
-          <button
-            className="rounded-full p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-            onClick={onToggleCollapsed}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          >
-            <PanelLeftClose className={`h-5 w-5 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
-          </button>
-        </div>
+    // The key change is here: reducing the transition duration for a snappier feel.
+    const transitionSpeed = 'transition-all duration-300 ease-in-out';
 
-        <NavLinks collapsed={collapsed} />
+    const sidebarWidthClass = collapsed ? 'md:w-20' : 'md:w-64';
+    const mobileTransformClass = mobileOpen ? 'translate-x-0' : '-translate-x-full';
 
-        <div className="border-t border-slate-200 p-2 dark:border-slate-700">
-          {collapsed ? (
-            <div className="flex flex-col items-center space-y-2">
-              <ThemeToggle theme={theme} setTheme={setTheme} />
-              <Tooltip text="Logout" position="right" disabled={!collapsed}>
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); onLogout(); }}
-                  className="group flex w-full justify-center rounded-lg p-2.5 text-sm font-medium text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700"
-                >
-                  <LogOut className="h-5 w-5 flex-shrink-0" />
-                </a>
-              </Tooltip>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <a
-                href="#"
-                onClick={(e) => { e.preventDefault(); onLogout(); }}
-                className="group flex flex-1 items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700"
-              >
-                <LogOut className="mr-3 h-5 w-5 flex-shrink-0" />
-                <span>Logout</span>
-              </a>
-              <ThemeToggle theme={theme} setTheme={setTheme} />
-            </div>
-          )}
-        </div>
-      </aside>
+    return (
+        <>
+            {/* Overlay for mobile */}
+            <div
+                className={`fixed inset-0 z-30 bg-black/30 md:hidden ${mobileOpen ? 'block' : 'hidden'}`}
+                onClick={onCloseMobile}
+                aria-hidden="true"
+            ></div>
 
-      {/* Mobile Sidebar Overlay */}
-      <div
-        className={`fixed inset-0 z-30 bg-black/30 transition-opacity duration-200 md:hidden ${
-          mobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
-        }`}
-        onClick={onCloseMobile}
-      />
-      
-      {/* Mobile Sidebar */}
-      <aside
-        className={`fixed left-0 top-0 z-40 flex h-full w-64 transform flex-col border-r border-slate-200 bg-slate-100 text-gray-800 shadow-xl transition-transform duration-300 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200 md:hidden ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-        aria-hidden={!mobileOpen}
-      >
-        <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-700">
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 text-lg font-bold text-white">T</span>
-            <span className="font-semibold">TGCF Web UI</span>
-          </Link>
-          <button
-            className="rounded-full p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-            onClick={onCloseMobile}
-            aria-label="Close sidebar"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+            {/* Main Sidebar */}
+            <aside
+                className={`fixed top-0 left-0 z-40 flex h-full w-64 flex-col border-r border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 md:flex ${sidebarWidthClass} ${transitionSpeed} transform md:translate-x-0 ${mobileTransformClass}`}
+            >
+                {/* Sidebar Header */}
+                <div className={`flex h-16 items-center border-b border-gray-200 px-4 dark:border-gray-700 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+                    {!collapsed && (
+                        <Link to="/dashboard" className="flex items-center gap-2" onClick={onCloseMobile}>
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-blue-600 to-indigo-600 font-bold text-white">T</span>
+                            <span className="text-sm font-semibold">TGCF Web UI</span>
+                        </Link>
+                    )}
+                     <button onClick={onCloseMobile} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 md:hidden">
+                        <X className="h-6 w-6" />
+                    </button>
+                </div>
 
-        <NavLinks collapsed={false} onLinkClick={onCloseMobile} />
+                {/* Navigation Links */}
+                <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-4">
+                    {pages.map((page) => (
+                        <NavLink
+                            key={page.name}
+                            to={page.href}
+                            onClick={onCloseMobile}
+                            className={({ isActive }) =>
+                                `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                                    isActive
+                                        ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300'
+                                        : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                                } ${collapsed ? 'justify-center' : ''}`
+                            }
+                        >
+                            <page.icon className={`h-5 w-5 flex-shrink-0 ${!collapsed ? 'mr-3' : ''}`} />
+                            {!collapsed && <span className="truncate">{page.name}</span>}
+                        </NavLink>
+                    ))}
+                </nav>
 
-        <div className="flex items-center justify-between border-t border-slate-200 p-4 dark:border-slate-700">
-          <a
-            href="#"
-            onClick={(e) => { e.preventDefault(); onLogout(); onCloseMobile(); }}
-            className="group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-slate-200 dark:text-gray-300 dark:hover:bg-slate-700"
-          >
-            <LogOut className="mr-3 h-5 w-5" />
-            <span>Logout</span>
-          </a>
-          <ThemeToggle theme={theme} setTheme={setTheme} />
-        </div>
-      </aside>
-    </>
-  );
+                {/* Sidebar Footer */}
+                <div className="border-t border-gray-200 p-2 dark:border-gray-700">
+                    <div className={`flex items-center p-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+                        {!collapsed && <ThemeToggle theme={theme} setTheme={setTheme} />}
+                        <button
+                            onClick={onToggleCollapsed}
+                            className={`hidden items-center rounded-md p-2 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 md:flex`}
+                            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        >
+                            {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+                        </button>
+                    </div>
+                    <button
+                        onClick={onLogout}
+                        className={`flex w-full items-center rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 ${collapsed ? 'justify-center' : ''}`}
+                    >
+                        <LogOut className={`h-5 w-5 ${!collapsed ? 'mr-3' : ''}`} />
+                        {!collapsed && <span>Logout</span>}
+                    </button>
+                </div>
+            </aside>
+        </>
+    );
 };
